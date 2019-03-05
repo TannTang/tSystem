@@ -1,197 +1,194 @@
-const BdyPrs = require('body-parser');
-const Pth = require('path');
+const BodyParser = require('body-parser');
+const Path = require('path');
 
-const MngCln = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 const ObjId = require('mongodb').ObjectID;
 
-const Exp = require('express');
-const Bcr = require('bcrypt-nodejs');
+const Express = require('express');
+const Crypto = require('crypto');
 
-const Sht = require('../murmur/murmursheet.js');
-//const Sht = require('../01_yd/ShtYd.js');
-//const Sht = require('../01_sh/ShtSh.js');
-//const UpdImgSngBlbRtr = require('./UpdImgSngBlbRtr.js');
-const UpdImgBlbRtr = require('./UpdImgBlbRtr.js');
-const UpdRfrRtr = require('./UpdRfrRtr.js');
-const UpdBrdsRtr = require('./UpdBrdsRtr.js');
+//const Sheet = require('../shishi/DataSheet_shishi.js');
+//const Sheet = require('../youdu/DataSheet_youdu.js');
+const Sheet = require('../murmur/DataSheet_murmur.js');
 
-const dbURL = Sht.db.url;
-const dbNm = Sht.db.name;
-const clls = Sht.collections;
+const UpdImgsBlobRouter = require('./UpdImgsBlobRouter.js');
+const UpdRefsRouter = require('./UpdRefsRouter.js');
+//const UpdBridgesRouter = require('./UpdBridgesRouter.js');
 
-const ts = async () => {
+const dbURL = Sheet.db.url;
+const dbName = Sheet.db.name;
+const sheetColls = Sheet.collections;
 
-const mngCln = new MngCln(dbURL, {useNewUrlParser:true});
+const TSystem = async () => {
+
+const mongoClient = new MongoClient(dbURL, {useNewUrlParser:true});
 
 try {
 
-	await mngCln.connect();
-	console.log('connected to '+ dbURL +' ---> '+ dbNm);
+	await mongoClient.connect();
+	console.log('connected to '+ dbURL +' ---> '+ dbName);
 
-	const db = mngCln.db(dbNm);
+	const db = mongoClient.db(dbName);
 
-	const app = Exp();
+	const app = Express();
 	// ---------- body-parser ----------------------------------------------------------------------------------------------------
-	app.use(BdyPrs.json());
-	app.use(BdyPrs.urlencoded({//此项必须在 bodyParser.json 下面,為參數編碼
+	app.use(BodyParser.json());
+	app.use(BodyParser.urlencoded({//此项必须在 bodyParser.json 下面,為參數編碼
 		extended: true
 	}));
-	app.use(Exp.static(Pth.join(__dirname, 'client/build')));
-	app.use('/updImgBlb', UpdImgBlbRtr(clls, db));
-	app.use('/updRfr', UpdRfrRtr(clls, db));
-	app.use('/updBrds', UpdBrdsRtr(db));
+	app.use(Express.static(Path.join(__dirname, 'client/build')));
+	app.use('/upd_imgsblob', UpdImgsBlobRouter(sheetColls, db));
+	app.use('/upd_refs', UpdRefsRouter(sheetColls, db));
+	//app.use('/upd_bridges', UpdBridgesRouter(db));
 
-	function crt_dcm (cllKy) {
-		
-		let flds = clls[cllKy].fields;
-		let fldKys = Object.keys(flds);
-
-		let dcm = {};
-
-		for (let i=0; i<fldKys.length; i++) {
-			let fldKy = fldKys[i];
-			let bsnTyp = flds[fldKy].default.bsonType;
-			let vl = flds[fldKy].default.value;
-
-			switch (bsnTyp) {
-				case 'objectId': dcm[fldKy] = new ObjId(); break;
-				case 'timestamp': dcm[fldKy] = new TmStm(); break;
-				case 'date': dcm[fldKy] = new Date(); break;
-				default: dcm[fldKy] = vl; break;
+	function create_doc (coll) {
+		let flds = sheetColls[coll].fields;
+		let fldKeys = Object.keys(flds);
+		let doc = {};
+		for (let i=0; i<fldKeys.length; i++) {
+			let fldKey = fldKeys[i];
+			let bsonType = flds[fldKey].def.bsonType;
+			let val = flds[fldKey].def.val;
+			switch (bsonType) {
+				case 'objectId': doc[fldKey] = new ObjId(); break;
+				case 'date': doc[fldKey] = new Date(); break;
+				default: doc[fldKey] = val; break;
 			}
 		}
-		return dcm;
+		return doc;
 	}
 
-	app.get ('/*', function (rqs, rsp) {
-		rsp.sendFile(Pth.join(__dirname, 'client/build', 'index.html'));
+	app.get ('/*', (req, resp) => {
+		resp.sendFile(Path.join(__dirname, 'client/build', 'index.html'));
 	});
 
-	app.post('/fnd_sht', (rqs, rsp) => {
-		rsp.send(Sht);
+	app.post('/find_sheet', (req, resp) => {
+		//console.log('/find_sheet');
+		resp.send(Sheet);
 	});
 
-	app.post ('/fnd_flt', async (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
+	app.post ('/find_filter', async (req, resp) => {
+		let coll = req.body.coll;
 
-		let flt = await db.collection('filters').findOne({collection:cllKy});
+		let filter = await db.collection('filters').findOne({collection:coll});
 
-		if (flt) {
-			rsp.send(flt);
+		if (filter) {
+			resp.send(filter);
 		} else {
 			let flds = [];
 
-			let sltFlds = clls[cllKy].fields;
-			let sltFldKys = Object.keys(sltFlds);
+			let selFlds = sheetColls[coll].fields;
+			let selFldKeys = Object.keys(selFlds);
 			
-			for (let i=0; i<sltFldKys.length; i++) {
-				sltFld = sltFlds[sltFldKys[i]];
-				flds[i] = {key:sltFldKys[i], label:sltFld.label, boolean:false};
+			for (let i=0; i<selFldKeys.length; i++) {
+				selFld = selFlds[selFldKeys[i]];
+				flds[i] = {key:selFldKeys[i], label:selFld.label, boolean:false};
 			};
 
-			flt = crt_dcm('filters');
-			flt.collection = cllKy;
-			flt.fields = flds;
+			filter = create_doc('filters');
+			filter.collection = coll;
+			filter.fields = flds;
 
-			db.collection('filters').insertOne(flt, (err, dbRsp) => {
-				rsp.send(dbRsp.ops[0]);
+			db.collection('filters').insertOne(filter, (err, result) => {
+				resp.send(result.ops[0]);
 			});
 		}
 	});
 
-	app.post ('/upd_flt', async (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
-		let fltKy = rqs.body.fltKy;
-		let fltBln = rqs.body.fltBln;
-		let nwFlts = await db.collection('filters').findOneAndUpdate({collection:cllKy, 'fields.key':fltKy}, {$set:{'fields.$.boolean':fltBln}}, {returnOriginal:false});
-		rsp.send(nwFlts.value);
+	app.post ('/upd_filter', async (req, resp) => {
+		let coll = req.body.coll;
+		let filterKey = req.body.filterKey;
+		let filterBool = req.body.filterBool;
+		let newFilters = await db.collection('filters').findOneAndUpdate({collection:coll, 'fields.key':filterKey}, {$set:{'fields.$.boolean':filterBool}}, {returnOriginal:false});
+		resp.send(newFilters.value);
 	});
 
-	app.post('/fnd_dcms', async (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
-		let flts = rqs.body.flts;
-		let prj = {};
-		for (let i=0; i<flts.length; i++) {
-			if (flts[i].boolean) {
-				prj[flts[i].key] = 1;
+	app.post('/find_docs', async (req, resp) => {
+		let coll = req.body.coll;
+		let filters = req.body.filters;
+		let projectObj = {};
+		for (let i=0; i<filters.length; i++) {
+			if (filters[i].boolean) {
+				projectObj[filters[i].key] = 1;
 			}
 		}
-		let dcms = await db.collection(cllKy).find({}).project(prj).toArray();
-		rsp.send(dcms);
+		let docs = await db.collection(coll).find({}).project(projectObj).toArray();
+		resp.send(docs);
 	});
 
-	app.post('/fnd_dcm', async (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
-		let _dcmId = new ObjId(rqs.body._dcmId);
-		let dcm = await db.collection(cllKy).findOne({_id:_dcmId});
-		rsp.send(dcm);
+	app.post('/find_doc', async (req, resp) => {
+		let coll = req.body.coll;
+		let _docId = new ObjId(req.body._docId);
+		let doc = await db.collection(coll).findOne({_id:_docId});
+		resp.send(doc);
 	});
 
-	app.post('/ins_dcm', (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
+	app.post('/ins_doc', (req, resp) => {
+		let coll = req.body.coll;
 		
-		let dcm = crt_dcm(cllKy);
+		let doc = create_doc(coll);
 
-		db.collection(cllKy).insertOne(dcm, (err, dbRsp) => {
-			rsp.send(dbRsp.ops[0]); 
+		db.collection(coll).insertOne(doc, (err, result) => {
+			resp.send(result.ops[0]); 
 		});
 	});
 
-	app.post ('/upd_dcm', async (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
-		let _dcmId = new ObjId(rqs.body._dcmId);
-		let obj = rqs.body.obj;
-		//console.log(cllKy+', '+_id);
-		let nwDcm = await db.collection(cllKy).findOneAndUpdate({_id:_dcmId}, {$set:obj}, {returnOriginal:false});
-		rsp.send(nwDcm.value);
+	app.post ('/upd_doc', async (req, resp) => {
+		let coll = req.body.coll;
+		let _docId = new ObjId(req.body._docId);
+		let obj = req.body.obj;
+		//console.log(coll+', '+_id);
+		let newDcm = await db.collection(coll).findOneAndUpdate({_id:_docId}, {$set:obj}, {returnOriginal:false});
+		resp.send(newDcm.value);
 	});
 
-	app.post ('/upd_dcmPss', async (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
-		let _dcmId = new ObjId(rqs.body._dcmId);
-		let fldKy = rqs.body.fldKy;
-		let vl = rqs.body.vl;
-		if (vl !== '') {
-			vl = Bcr.hashSync(rqs.body.vl);
+	app.post ('/upd_docPss', async (req, resp) => {
+		let coll = req.body.coll;
+		let _docId = new ObjId(req.body._docId);
+		let fldKey = req.body.fldKey;
+		let val = req.body.val;
+		if (val !== '') {
+			//val = Crypto.hashSync(req.body.val);
+			val = crypto.createHmac('sha256').update(val).digest('hex');
 		}
 		let obj = {};
-		obj[fldKy] = vl;
+		obj[fldKey] = val;
 
-		let nwDcm = await db.collection(cllKy).findOneAndUpdate({_id:_dcmId}, {$set:obj}, {returnOriginal:false});
-		rsp.send(nwDcm.value);
+		let newDcm = await db.collection(coll).findOneAndUpdate({_id:_docId}, {$set:obj}, {returnOriginal:false});
+		resp.send(newDcm.value);
 	});
 
-	app.post('/dlt_dcm', async (rqs, rsp) => {
-		let cllKy = rqs.body.cllKy;
-		let _dcmId = new ObjId(rqs.body._dcmId);
-		let flds = clls[cllKy].fields;
-		let fldKys = Object.keys(flds);
+	app.post('/del_doc', async (req, resp) => {
+		let coll = req.body.coll;
+		let _docId = new ObjId(req.body._docId);
+		let flds = sheetColls[coll].fields;
+		let fldKeys = Object.keys(flds);
 
-		for (let i=0; i<fldKys.length; i++) {
-			if (flds[fldKys[i]].reference) {
-				let dcm = await db.collection(cllKy).findOne({_id:_dcmId});
-				if (dcm[fldKys[i]].length !== 0) {
-					//console.log(dcm[fldKys[i]]);
-					rsp.send('have reference');
+		for (let i=0; i<fldKeys.length; i++) {
+			if (flds[fldKeys[i]].reference) {
+				let doc = await db.collection(coll).findOne({_id:_docId});
+				if (doc[fldKeys[i]].length !== 0) {
+					//console.log(doc[fldKeys[i]]);
+					resp.send('have reference');
 					return;
 				}
-				/*let rfrCllKy = flds[fldKys[i]].reference.collection;
-				let rfrFld = flds[fldKys[i]].reference.field;
-				let fndObj = {};
-				fndObj[rfrFld] = _dcmId;
+				/*let rfrCllKy = flds[fldKeys[i]].reference.collection;
+				let rfrFld = flds[fldKeys[i]].reference.field;
+				let findObj = {};
+				findObj[rfrFld] = _docId;
 
 				if (rfrCllKy === 'images') {
-					let imgs = await db.collection('images').find(fndObj).toArray();
+					let imgs = await db.collection('images').find(findObj).toArray();
 					if (imgs.length !== 0) {
-						rsp.send('images');
+						resp.send('images');
 						return;
 					}
 				}
-				await db.collection(rfrCllKy).deleteMany(fndObj);*/
+				await db.collection(rfrCllKy).deleteMany(findObj);*/
 			}
 		}
-		await db.collection(cllKy).deleteOne({_id:_dcmId}, (err, dbRsp) => {
-			rsp.send(dbRsp);
+		await db.collection(coll).deleteOne({_id:_docId}, (err, dbRsp) => {
+			resp.send(dbRsp);
 		});
 	});
 
@@ -205,4 +202,4 @@ try {
 
 };
 
-ts();
+TSystem();

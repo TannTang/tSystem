@@ -1,33 +1,87 @@
-.App {
-  text-align: center;
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css?family=Abel');
+
+*{border:none; background:none; border-collapse:collapse; outline:none; margin:0px; padding:0px; list-style:none; text-decoration-line:none;
+-webkit-appearance:none; -moz-appearance:none; appearance:none;
+-webkit-tap-highlight-color:rgba(0,0,0,0);
+font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:10pt;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
+.App{}
+.Top{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
+.Find{}
+.findTitle{border-bottom:1px #cccccc solid; text-align:center; padding:5px;}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+.FindSel{display:flex; flex-direction:row; width:100%; border-bottom:1px #000000 solid;}
+.findOption{flex:auto; border-right:0px #000000 solid; background-color:#000000; text-align:center; color:#ffffff; padding:5px; margin:5px; cursor:pointer;}
 
-.App-link {
-  color: #61dafb;
-}
+.FindLst{}
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.FindFilter{}
+.findFilterTitle{border-bottom:1px #cccccc solid; text-align:center; padding:5px;}
+.findFilterFlds{border-bottom:1px #000000 solid; display:flex; flex-direction:row;}
+.FindFilterFld{flex:auto; text-align:center; padding:5px; margin:5px; cursor:pointer;}
+
+.FindDocs{}
+.findDocsIns{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
+.findDocsInsOption{display:inline-block; background-color:#0000ff; color:#ffffff; padding:5px; cursor:pointer;}
+
+.FindDoc{display:flex; flex-direction:row; border-bottom:1px #000000 solid; width:100%;}
+/*.findDocId{border-right:1px #cccccc solid; color:#0000ff; padding:5px;}*/
+.findDocFlds{display:flex; flex-direction:row; width:90%;}
+
+.FindDocFld{display:flex; flex:auto; flex-basis:0; border:1px #cccccc solid; padding:5px; margin:5px;}
+/*.findDocFldCnt{display:flex; border:1px #cccccc solid; padding:5px; margin:5px;}*/
+.findDocFldLabel{color:#999999;}
+.findDocFldVal{color:#000000; margin-left:5px;}
+
+.findDocOptions{width:10%; border-left:1px #000000 solid;}
+.findDocOption{display:inline-block; background-color:#0000ff; text-align:center; color:#ffffff; padding:5px; margin:5px; cursor:pointer;}
+
+.Upd{}
+.updId{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
+
+.UpdFld{display:flex; flex-direction:row; border-bottom:1px #000000 solid;}
+.updFldLabel{border-right:1px #000000 solid; width:10%; padding:5px;}
+.updFldVal{width:90%; padding:5px;}
+
+.updNull{padding:5px;}
+
+.UpdInp{border:1px #cccccc solid; width:50%; padding:5px;}
+.UpdInps{border:1px #cccccc solid; padding:5px;}
+
+.updInpsSub{margin-bottom:5px;}
+.updInpsAdd{border:1px #0000ff solid; background-color:#0000ff; color:#ffffff; width:50%; text-align:center; padding:5px; cursor:pointer;}
+.updInpsRemove{border:1px #cccccc solid; background-color:#cccccc; width:50%; text-align:center; padding:5px; cursor:pointer;}
+
+.UpdTxtArea{border:1px #cccccc solid; width:50%; padding:5px;}
+
+.UpdSel{border:1px #cccccc solid; width:50%; padding:5px; cursor:pointer;}
+
+.UpdContentEditable{border:1px #cccccc solid; width:50%; padding:5px;}
+
+.UpdImgs{border:1px #cccccc solid; padding:5px;}
+.updImgsFile{border:1px #cccccc solid; background-color:#cccccc; width:50%; text-align:left; padding:5px; margin-bottom:5px; cursor:pointer;}
+.updImgsInfo{border:1px #ff2222 solid; background-color:#ff2222; color:#ffffff; width:50%; text-align:left; padding:5px; margin-bottom:5px; cursor:pointer;}
+.updImgsIns{border:1px #0000ff solid; background-color:#0000ff; color:#ffffff; width:50%; text-align:center; padding:5px; cursor:pointer;}
+.updImgsItems{margin-bottom:5px;}
+.updImgsItem{display:inline-block; width:10%; border:1px #cccccc solid; padding:5px; margin-right:5px;}
+.updImgsId{padding:5px;}
+.updImgsView{width:100%;}
+.updImgsMovs{display:flex; margin-bottom:5px;}
+.updImgsMov{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-right:0px; cursor:pointer;}
+.updImgsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
+.updImgsDel{background-color:#0000ff; color:#ffffff; text-align:center; padding:5px; cursor:pointer;}
+
+.UpdRefs{border:1px #cccccc solid; padding:5px;}
+.updRefsBlk{display:flex; flex-direction:row; flex-wrap:wrap; border:1px #cccccc solid; padding:5px;}
+.updRefsRef{flex-basis:15%; border:1px #cccccc solid; padding:5px; margin-right:5px; margin-bottom:5px;}
+.updRefsFlds{}
+.updRefsFld{border-bottom:1px #cccccc solid; padding:5px;}
+
+.updRefsBtns{display:flex;}
+.updRefsMov{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-right:0px; cursor:pointer;}
+.updRefsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:0px; cursor:pointer;}
+.updRefsCancel{flex:auto; background-color:#2222ff; text-align:center; color:#ffffff; padding:5px; cursor:pointer;}
+.updRefsSel{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; cursor:pointer;}

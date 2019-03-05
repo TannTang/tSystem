@@ -1,10 +1,12 @@
 {
   "name": "tsystem",
   "version": "1.0.0",
-  "description": "",
+  "description": "tsystem alpha",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node TSystem.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/TannTang/tsystem/issues"
   },
-  "homepage": "https://github.com/TannTang/tsystem#readme"
+  "homepage": "https://github.com/TannTang/tsystem#readme",
+  "dependencies": {
+    "azure-storage": "^2.10.2",
+    "express": "^4.16.4",
+    "mongodb": "^3.1.13",
+    "multer": "^1.4.1",
+    "sharp": "^0.21.3"
+  }
 }
