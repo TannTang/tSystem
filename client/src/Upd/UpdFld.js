@@ -7,6 +7,7 @@ import UpdSel from './UpdSel.js';
 import UpdContentEditable from './UpdContentEditable.js';
 
 import UpdImgsBlob from './UpdImgsBlob.js';
+import UpdDocsBucket from './UpdDocsBucket.js';
 import UpdRefs from './UpdRefs.js';
 //import UpdBrds from './UpdBrds.js';
 
@@ -41,7 +42,8 @@ class UpdFld extends Component {
 
 			case 'updContentEditable': updComponent = <UpdContentEditable val={val} upd_fld={this.upd_fld} />; break;
 
-			case 'updImgsBlob': updComponent = <UpdImgsBlob coll={coll} _docId={_docId} fld={fld} setObj={sheetFld.upd.set} refEmbed={sheetFld.upd.refEmbed} />; break;
+			case 'updImgsBlob': updComponent = <UpdImgsBlob coll={coll} _docId={_docId} fld={fld}/* setObj={sheetFld.upd.set} refEmbed={sheetFld.upd.refEmbed} *//>; break;
+			case 'updDocsBucket': updComponent = <UpdDocsBucket coll={coll} _docId={_docId} fld={fld} />; break;
 			case 'updRefs': updComponent = <UpdRefs coll={coll} _docId={_docId} fld={fld} />; break;
 			//case 'updBridges': updComponent = <UpdBridges colls={colls} coll={coll} _docId={_docId} fldKey={fldKey} fld={fld} />; break;
 			default: updComponent = <div className="updNull">{val}</div>; break;

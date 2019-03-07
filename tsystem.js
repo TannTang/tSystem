@@ -1,3 +1,5 @@
+'use strict';
+
 const BodyParser = require('body-parser');
 const Path = require('path');
 
@@ -12,6 +14,7 @@ const Crypto = require('crypto');
 const Sheet = require('../murmur/DataSheet_murmur.js');
 
 const UpdImgsBlobRouter = require('./UpdImgsBlobRouter.js');
+const UpdDocsBucketRouter = require('./UpdDocsBucketRouter.js');
 const UpdRefsRouter = require('./UpdRefsRouter.js');
 //const UpdBridgesRouter = require('./UpdBridgesRouter.js');
 
@@ -38,6 +41,7 @@ try {
 	}));
 	app.use(Express.static(Path.join(__dirname, 'client/build')));
 	app.use('/upd_imgsblob', UpdImgsBlobRouter(sheetColls, db));
+	app.use('/upd_docsbucket', UpdDocsBucketRouter(sheetColls, db));
 	app.use('/upd_refs', UpdRefsRouter(sheetColls, db));
 	//app.use('/upd_bridges', UpdBridgesRouter(db));
 

@@ -44,7 +44,7 @@ class Upd extends Component {
 		let obj = {};
 		obj[fld] = val;
 		Axios.post('/upd_doc', {coll:coll, _docId:_docId, obj:obj}).then((resp) => {
-			console.log(resp.data);
+			//console.log(resp.data);
 		});
 	}
 

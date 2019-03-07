@@ -1,39 +1,54 @@
+'use strict';
+
+// const roleName = 'Role to grant, e.g. roles/storage.objectViewer';
+// const members = [
+//   'user:jdoe@example.com',    // Example members to grant
+//   'group:admins@example.com', // the new role to
+// ];
+
+const {Storage} = require('@google-cloud/storage');
+
+const PROJECT_ID = 'murmur-232909';
+const BUCKET_NAME = 'murmur-bucket';
+const IAM_ROLE = 'roles/storage.objectAdmin';
+
+const MEMBERS = [
+	'user:tannfeel@gmail.com',    // Example members to grant
+	//'group:admins@example.com', // the new role to
+];
+
+const stg = new Storage({
+  projectId: PROJECT_ID,
+  keyFilename: '../murmur/murmur-4eea707b0d9e.json'
+});
+
+const bucket = stg.bucket(BUCKET_NAME);
+
+
 const FS = require('fs');
 
 const ObjId = require('mongodb').ObjectID;
 
 const Express = require('express');
-const AzrStg = require('azure-storage');
+//const AzrStg = require('azure-storage');
+
 const Multer = require('multer');
-const Sharp = require('sharp');
 
-const uploads = Multer({dest:'uploads/'});
-
-const ascs = 'DefaultEndpointsProtocol=https;AccountName=youdu;AccountKey=/NeujD/MOD+Pfs6mTu43z6NrrlZoULU6/IEfJ4QWLDtQHrICIg4maua8LS+rVPZNqOJ9SbHe8eHioN7+r2jDHQ==;EndpointSuffix=core.windows.net';
-//const ascs = 'DefaultEndpointsProtocol=https;AccountName=shi;AccountKey=f6ObExk54WzwiIJydGPuPFRwLyLZVQGNq1wu9cVyzrtNB57CekwAWoUIcN/rzM2g3NDz+ZjNbyMsRvuONBHbuA==;EndpointSuffix=core.windows.net';
-const blobSvr = AzrStg.createBlobService(ascs);
-const blobContainer = 'youdu-imgs';
-//const blobContainer = 'shiblb';
-blobSvr.createContainerIfNotExists(blobContainer, function (err) {
-	if (err) {
-		console.log(err);
-	} else { 
-		setPermissions();
+const multer = Multer({
+	dest:'uploads/',
+	storage: Multer.MemoryStorage,
+	limits: {
+		fileSize: 5 * 1024 * 1024 // no larger than 5mb
 	}
 });
 
-function setPermissions() {
-	let options = {publicAccessLevel:AzrStg.BlobUtilities.BlobContainerPublicAccessType.BLOB};
-		blobSvr.setContainerAcl(blobContainer, null, options, (err) => {
-		if (err) {
-			console.log(err);
-		} 
-	});
-}
+const Sharp = require('sharp');
+
+//const uploads = Multer({dest:'uploads/'});
 
 module.exports = (sheetColls, db) => {
 
-	const imgSizes = [{letter:'S', width:128}, {letter:'M', width:512}, {letter:'L', width:1024}];
+	const imgSizes = [{letter:'S', width:256}, {letter:'M', width:1024}, {letter:'L', width:2048}];
 	const router = Express.Router();
 
 	function create_doc (coll) {
@@ -68,31 +83,91 @@ module.exports = (sheetColls, db) => {
 
 		let doc = await db.collection(coll).findOne({_id:_docId});
 
-		let _ids = [];
-		for (let i=0; i<doc[fld].length; i++) {
-			if (doc[fld][i]._id) {
-				_ids.push(doc[fld][i]._id);
-			} else {
-				_ids.push(doc[fld][i]);
+		if (doc[fld]) {
+			let _ids = [];
+			for (let i=0; i<doc[fld].length; i++) {
+				if (doc[fld][i]._id) {
+					_ids.push(doc[fld][i]._id);
+				} else {
+					_ids.push(doc[fld][i]);
+				}
 			}
+
+			let findObj = {_id:{$in:_ids}};
+			let imgs = await db.collection('images').find(findObj).toArray();
+			let orderImgs = orderResult(imgs, _ids);
+
+			resp.send(orderImgs);
+		} else {
+			resp.send([]);
 		}
-
-		let findObj = {_id:{$in:_ids}};
-		let imgs = await db.collection('images').find(findObj).toArray();
-		let orderImgs = orderResult(imgs, _ids);
-
-		resp.send(orderImgs);
 	});
 
-	router.post('/ins_img', uploads.single('file'), (req, resp) => {
+	router.post('/ins_img', multer.single('file'), async (req, resp, next) => {
 
+		const [policy] = await bucket.iam.getPolicy();
+
+		console.log(policy);
+
+		policy.bindings.push({
+			role: IAM_ROLE,
+			members: MEMBERS,
+		});
+
+		await bucket.iam.setPolicy(policy);
+
+		console.log(
+			`Added the following member(s) with role ${IAM_ROLE} to ${BUCKET_NAME}:`
+		);
+
+		/*console.log(req.file);
+		const filename = Date.now() + req.file.filename;
+		const path = req.file.path;
+
+
+		
+		await stg.bucket(CLOUD_BUCKET).upload(path, {
+			gzip: true,
+			metadata: {
+				cacheControl: 'public, max-age=31536000',
+			},
+		});
+
+		console.log(`${path} uploaded to ${CLOUD_BUCKET}.`);
+*/
+		/*const file = bucket.file(gcsname);
+
+		const stream = file.createWriteStream({
+			metadata: {
+				contentType: req.file.mimetype
+			},
+			resumable: false
+		});
+
+		stream.on('error', (err) => {
+			console.log('error');
+			req.file.cloudStorageError = err;
+			next(err);
+		});
+
+		stream.on('finish', () => {
+			console.log('finish');
+			req.file.cloudStorageObject = gcsname;
+			file.makePublic().then(() => {
+				req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
+				next();
+			});
+		});
+
+		stream.end(req.file.buffer);*/
+		/*
 		let img = create_doc('images');
 		let refEmbed = sheetColls[req.body.coll].fields[req.body.fld].upd.refEmbed;
 		let setType = sheetColls[req.body.coll].fields[req.body.fld].upd.setType;
 
-		img['referenceCollectionKey'] = req.body.coll;
+		img['referenceCollection'] = req.body.coll;
 		img['_referenceDocumentId'] = new ObjId(req.body._docId);
-		img['referenceFieldKey'] = req.body.fld;
+		img['referenceField'] = req.body.fld;
 		img['type'] = setType;
 		img['scale'] = req.body.scale;
 		img['fileName'] = req.file.filename;
@@ -105,12 +180,12 @@ module.exports = (sheetColls, db) => {
 
 			Sharp(req.file.path)
 			.resize(imgSizes[i].width, Math.round(imgSizes[i].width * img.scale), {
-				//fit: Sharp.fit.contain,
+
 			})
 			.toFormat('jpeg')
 			.toFile(path)
-			.then((buf) => {
-				blobSvr.createBlockBlobFromLocalFile(blobContainer, fileName, path, async (err, result) => {
+			.then((buf) => {*/
+				/*blobSvr.createBlockBlobFromLocalFile(blobContainer, fileName, pth, async (err, result) => {
 					if (!err) {
 
 						let flUrl = __dirname+'/uploads/'+fileName;
@@ -148,10 +223,10 @@ module.exports = (sheetColls, db) => {
 						}
 					} else {
 						console.error(err);
-					}
-				});
+					}*/
+				/*});
 			});
-		}
+		}*/
 	});
 
 	router.post('/del_img', async (req, resp) => {

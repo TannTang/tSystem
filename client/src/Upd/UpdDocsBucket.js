@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 
-class UpdImgsBlob extends Component {
+class UpdDocsBucket extends Component {
 	constructor(props) {
 		super();
 
@@ -29,7 +29,7 @@ class UpdImgsBlob extends Component {
 		let fileName = e.target.files[0].name;
 
 		if (fileType === 'image/jpeg' || fileType === 'image/jpg' || fileType === 'image/png') {
-			if (fileSize < 2097152) {
+			if (fileSize < 5242880) {
 				let img = new Image();
 				img.onload = function () {
 					_this.setState({
@@ -42,7 +42,7 @@ class UpdImgsBlob extends Component {
 				img.src = _URL.createObjectURL(e.target.files[0]);
 			} else {
 				this.setState({
-					fileInfo: '影像檔案超過2MB',
+					fileInfo: '影像檔案超過5MB',
 					scale: 0,
 					isSelected: false,
 				});
@@ -58,28 +58,26 @@ class UpdImgsBlob extends Component {
 
 	find_imgs (coll, _docId, fld) {
 		//console.log(coll+', '+_docId+', '+fld);
-		Axios.post('/upd_imgsblob/find_imgs', {coll:coll, _docId:_docId, fld:fld}).then((resp) => {
+		Axios.post('/upd_docsbucket/find_imgs', {coll:coll, _docId:_docId, fld:fld}).then((resp) => {
 			//console.log(resp.data);
 			this.setState({imgs:resp.data});
 		});
 	}
 
 	ins_img () {
-		const {coll, _docId, fld/*, setObj, refEmbed*/} = this.props;
+		const {coll, _docId, fld} = this.props;
 		const {file, scale} = this.state;
 
 		let formData = new FormData();
 		formData.append('coll', coll);
 		formData.append('_docId', _docId);
 		formData.append('fld', fld);
-		//formData.append('type', setObj.type);
-		//formData.append('refEmbed', JSON.stringify(refEmbed));
 		formData.append('file', file);
 		formData.append('scale', scale);
 
-		Axios.post('/upd_imgsblob/ins_img', formData).then((resp) => {
+		Axios.post('/upd_docsbucket/ins_img', formData).then((resp) => {
 			//console.log(resp.data);
-			this.add_img(resp.data);
+			//this.add_img(resp.data);
 		});
 	}
 
@@ -90,7 +88,7 @@ class UpdImgsBlob extends Component {
 
 	del_img (img, idx) {
 		const {coll, _docId, fld} = this.props;
-		Axios.post('/upd_imgsblob/del_img', {coll:coll, _docId:_docId, fld:fld, _imgId:img._id, imgFileName:img.fileName}).then((resp) => {
+		Axios.post('/upd_docsbucket/del_img', {coll:coll, _docId:_docId, fld:fld, _imgId:img._id, imgFileName:img.fileName}).then((resp) => {
 			this.remove_img(idx);
 		});
 	}
@@ -103,7 +101,7 @@ class UpdImgsBlob extends Component {
 
 	upd_seq (idx, mov) {
 		const {coll, _docId, fld} = this.props;
-		Axios.post('/upd_imgsblob/upd_seq', {coll:coll, _docId:_docId, fld:fld, idx:idx, mov:mov}).then((resp) => {
+		Axios.post('/upd_docsbucket/upd_seq', {coll:coll, _docId:_docId, fld:fld, idx:idx, mov:mov}).then((resp) => {
 			//console.log(resp.data);
 			this.setState({imgs:resp.data});
 		})
@@ -122,7 +120,7 @@ class UpdImgsBlob extends Component {
 							{img.urlS ? (
 								<img className="updImgsView" src={img.urlS} />
 								) : (
-								<img className="updImgsView" src={img.urlL} />
+								<img className="updImgsView" src={img.urlM} />
 								)
 							}
 							<div className="updImgsId">_id: {img._id}</div>
@@ -143,4 +141,4 @@ class UpdImgsBlob extends Component {
 	}
 }
 
-export default UpdImgsBlob;
+export default UpdDocsBucket;
