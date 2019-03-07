@@ -1,16 +1,10 @@
 'use strict';
 
-// const roleName = 'Role to grant, e.g. roles/storage.objectViewer';
-// const members = [
-//   'user:jdoe@example.com',    // Example members to grant
-//   'group:admins@example.com', // the new role to
-// ];
-
 const {Storage} = require('@google-cloud/storage');
 
 const PROJECT_ID = 'murmur-232909';
-const BUCKET_NAME = 'murmur-bucket';
-const IAM_ROLE = 'roles/storage.objectAdmin';
+const BUCKET_NAME = 'murmur-id-bucket';
+//const IAM_ROLE = 'roles/storage.objectAdmin';
 
 const MEMBERS = [
 	'user:tannfeel@gmail.com',    // Example members to grant
@@ -18,20 +12,15 @@ const MEMBERS = [
 ];
 
 const stg = new Storage({
-  projectId: PROJECT_ID,
-  keyFilename: '../murmur/murmur-4eea707b0d9e.json'
+	projectId: PROJECT_ID,
+	keyFilename: '../murmur/murmur-821d4510cbe8.json'
 });
 
 const bucket = stg.bucket(BUCKET_NAME);
 
-
 const FS = require('fs');
-
 const ObjId = require('mongodb').ObjectID;
-
 const Express = require('express');
-//const AzrStg = require('azure-storage');
-
 const Multer = require('multer');
 
 const multer = Multer({
@@ -43,8 +32,6 @@ const multer = Multer({
 });
 
 const Sharp = require('sharp');
-
-//const uploads = Multer({dest:'uploads/'});
 
 module.exports = (sheetColls, db) => {
 
@@ -104,7 +91,52 @@ module.exports = (sheetColls, db) => {
 	});
 
 	router.post('/ins_img', multer.single('file'), async (req, resp, next) => {
+		
+		//console.log(req.file);
+		//const filename = Date.now() + req.file.filename;
+		const path = req.file.path;
 
+		let img = {};
+		img['scale'] = req.body.scale;
+		img['fileName'] = req.file.filename;
+		img['path'] = req.file.path;
+
+		Sharp(img.path)
+		.resize(512, Math.round(512 * img.scale))
+		.toFormat('jpeg')
+		.toFile(img.path +'_M.jpg')
+		.then(async (buf) => {
+			await stg.bucket(BUCKET_NAME).upload(img.path +'_M.jpg', {
+				gzip: true,
+			});
+			Sharp(img.path)
+			.resize(2048, Math.round(2048 * img.scale))
+			.toFormat('jpeg')
+			.toFile(img.path +'_L.jpg')
+			.then(async (buf) => {
+				await stg.bucket(BUCKET_NAME).upload(img.path +'_L.jpg', {
+					gzip: true,
+				});
+				FS.unlink(img.path +'_M.jpg', (err) => {if (err) throw err;});
+				FS.unlink(img.path +'_L.jpg', (err) => {if (err) throw err;});
+				FS.unlink(img.path, (err) => {if (err) throw err;});
+			});
+		});
+
+		
+
+		//}
+		
+		
+		//await stg.bucket(BUCKET_NAME).upload(path, {
+			//gzip: true,
+			//metadata: {
+				//cacheControl: 'public, max-age=31536000',
+			//},
+		//});
+	/*
+		console.log(`${path} uploaded to ${BUCKET_NAME}.`);
+		
 		const [policy] = await bucket.iam.getPolicy();
 
 		console.log(policy);
@@ -119,21 +151,8 @@ module.exports = (sheetColls, db) => {
 		console.log(
 			`Added the following member(s) with role ${IAM_ROLE} to ${BUCKET_NAME}:`
 		);
-
-		/*console.log(req.file);
-		const filename = Date.now() + req.file.filename;
-		const path = req.file.path;
-
-
-		
-		await stg.bucket(CLOUD_BUCKET).upload(path, {
-			gzip: true,
-			metadata: {
-				cacheControl: 'public, max-age=31536000',
-			},
-		});
-
-		console.log(`${path} uploaded to ${CLOUD_BUCKET}.`);
+		*/
+		/*
 */
 		/*const file = bucket.file(gcsname);
 

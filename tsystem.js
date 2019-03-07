@@ -152,8 +152,7 @@ try {
 		let fldKey = req.body.fldKey;
 		let val = req.body.val;
 		if (val !== '') {
-			//val = Crypto.hashSync(req.body.val);
-			val = crypto.createHmac('sha256').update(val).digest('hex');
+			val = Crypto.createHash('sha256').update(val).digest('hex');
 		}
 		let obj = {};
 		obj[fldKey] = val;
