@@ -85,7 +85,7 @@ try {
 			let selFldKeys = Object.keys(selFlds);
 			
 			for (let i=0; i<selFldKeys.length; i++) {
-				selFld = selFlds[selFldKeys[i]];
+				let selFld = selFlds[selFldKeys[i]];
 				flds[i] = {key:selFldKeys[i], label:selFld.label, boolean:false};
 			};
 
