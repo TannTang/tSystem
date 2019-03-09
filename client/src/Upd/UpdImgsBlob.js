@@ -21,35 +21,44 @@ class UpdImgsBlob extends Component {
 	}
 
 	sel_img (e) {
-		let _this = this;
-		let _URL = window.URL || window.webkitURL;
-		let file =  e.target.files[0];
-		let fileType = e.target.files[0].type;
-		let fileSize = e.target.files[0].size;
-		let fileName = e.target.files[0].name;
+		//console.log(e.target.files[0]);
+		if (e.target.files[0]) {
+			let _this = this;
+			let _URL = window.URL || window.webkitURL;
+			let file =  e.target.files[0];
+			let type = e.target.files[0].type;
+			let size = e.target.files[0].size;
+			let filename = e.target.files[0].name;
 
-		if (fileType === 'image/jpeg' || fileType === 'image/jpg' || fileType === 'image/png') {
-			if (fileSize < 2097152) {
-				let img = new Image();
-				img.onload = function () {
-					_this.setState({
-						file: file,
-						fileInfo: '已選擇影像檔案 ---> '+ fileName,
-						scale: this.height / this.width,
-						isSelected: true,
+			if (type === 'image/jpeg' || type === 'image/jpg' || type === 'image/png') {
+				if (size < 2097152) {
+					let img = new Image();
+					img.onload = function () {
+						_this.setState({
+							file: file,
+							fileInfo: '已選擇影像檔案 ---> '+ filename,
+							scale: this.height / this.width,
+							isSelected: true,
+						});
+					};
+					img.src = _URL.createObjectURL(e.target.files[0]);
+				} else {
+					this.setState({
+						fileInfo: '影像檔案超過2MB',
+						scale: 0,
+						isSelected: false,
 					});
-				};
-				img.src = _URL.createObjectURL(e.target.files[0]);
+				}
 			} else {
 				this.setState({
-					fileInfo: '影像檔案超過2MB',
+					fileInfo: '影像檔案類型錯誤，僅許可jpg / png檔',
 					scale: 0,
 					isSelected: false,
 				});
 			}
 		} else {
 			this.setState({
-				fileInfo: '影像檔案類型錯誤，僅許可jpg / png檔',
+				fileInfo: '未選擇影像擋案',
 				scale: 0,
 				isSelected: false,
 			});
@@ -90,7 +99,7 @@ class UpdImgsBlob extends Component {
 
 	del_img (img, idx) {
 		const {coll, _docId, fld} = this.props;
-		Axios.post('/upd_imgsblob/del_img', {coll:coll, _docId:_docId, fld:fld, _imgId:img._id, imgFileName:img.fileName}).then((resp) => {
+		Axios.post('/upd_imgsblob/del_img', {coll:coll, _docId:_docId, fld:fld, _imgId:img._id, imgFileName:img.filename}).then((resp) => {
 			this.remove_img(idx);
 		});
 	}
@@ -104,7 +113,7 @@ class UpdImgsBlob extends Component {
 	upd_seq (idx, mov) {
 		const {coll, _docId, fld} = this.props;
 		Axios.post('/upd_imgsblob/upd_seq', {coll:coll, _docId:_docId, fld:fld, idx:idx, mov:mov}).then((resp) => {
-			//console.log(resp.data);
+			console.log(resp.data);
 			this.setState({imgs:resp.data});
 		})
 	}
