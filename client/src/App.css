@@ -67,11 +67,13 @@ font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:10pt;
 .updImgsIns{border:1px #0000ff solid; background-color:#0000ff; color:#ffffff; width:50%; text-align:center; padding:5px; cursor:pointer;}
 .updImgsItems{margin-bottom:5px;}
 .updImgsItem{display:inline-block; width:10%; border:1px #cccccc solid; padding:5px; margin-right:5px;}
+.updImgsItem30{display:inline-block; width:30%; border:1px #cccccc solid; padding:5px; margin-right:5px;}
 .updImgsId{padding:5px;}
 .updImgsView{width:100%;}
 .updImgsMovs{display:flex; margin-bottom:5px;}
 .updImgsMov{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-right:0px; cursor:pointer;}
 .updImgsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
+.updImgsOpen{background-color:#0000ff; color:#ffffff; text-align:center; padding:5px; margin-bottom:5px; cursor:pointer;}
 .updImgsDel{background-color:#0000ff; color:#ffffff; text-align:center; padding:5px; cursor:pointer;}
 
 .UpdRefs{border:1px #cccccc solid; padding:5px;}

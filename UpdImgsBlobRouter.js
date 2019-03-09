@@ -182,7 +182,6 @@ module.exports = (sheetColls, db) => {
 									_newImgs.push(_orgImgs[i]);
 								}
 							}
-							
 						}
 
 						let updObj = {};

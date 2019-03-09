@@ -168,7 +168,7 @@ try {
 		let fldKeys = Object.keys(flds);
 
 		for (let i=0; i<fldKeys.length; i++) {
-			if (flds[fldKeys[i]].reference) {
+			if (flds[fldKeys[i]].ref) {
 				let doc = await db.collection(coll).findOne({_id:_docId});
 				if (doc[fldKeys[i]].length !== 0) {
 					//console.log(doc[fldKeys[i]]);

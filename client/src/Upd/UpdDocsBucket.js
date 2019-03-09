@@ -17,7 +17,13 @@ class UpdDocsBucket extends Component {
 		this.sel_img = this.sel_img.bind(this);
 		this.ins_img = this.ins_img.bind(this);
 
-		this.find_imgs(props.coll, props._docId, props.fld);
+		this.find_imgs(props.coll, props.fld, props._docId);
+	}
+
+	find_imgs (coll, fld, _docId) {
+		Axios.post('/upd_docsbucket/find_imgs', {coll:coll, fld:fld, _docId:_docId}).then((resp) => {
+			this.setState({imgs:resp.data});
+		});
 	}
 
 	sel_img (e) {
@@ -56,14 +62,6 @@ class UpdDocsBucket extends Component {
 		}
 	}
 
-	find_imgs (coll, _docId, fld) {
-		//console.log(coll+', '+_docId+', '+fld);
-		Axios.post('/upd_docsbucket/find_imgs', {coll:coll, _docId:_docId, fld:fld}).then((resp) => {
-			//console.log(resp.data);
-			this.setState({imgs:resp.data});
-		});
-	}
-
 	ins_img () {
 		const {coll, _docId, fld} = this.props;
 		const {file, scale} = this.state;
@@ -77,7 +75,7 @@ class UpdDocsBucket extends Component {
 
 		Axios.post('/upd_docsbucket/ins_img', formData).then((resp) => {
 			//console.log(resp.data);
-			//this.add_img(resp.data);
+			this.add_img(resp.data);
 		});
 	}
 
@@ -86,11 +84,20 @@ class UpdDocsBucket extends Component {
 		this.setState({imgs:array, file:null, fileInfo:'未選擇影像擋案', isSelected:false});
 	}
 
-	del_img (img, idx) {
+	find_img (img) {
 		const {coll, _docId, fld} = this.props;
-		Axios.post('/upd_docsbucket/del_img', {coll:coll, _docId:_docId, fld:fld, _imgId:img._id, imgFileName:img.fileName}).then((resp) => {
-			this.remove_img(idx);
+		Axios.post('/upd_docsbucket/find_img', {coll:coll, _docId:_docId, fld:fld, filenameL:img.filenameL}).then((resp) => {
+			window.open(resp.data);
 		});
+	}
+
+	del_img (img, idx) {
+		if (window.confirm('確定要刪除這筆資料？')) {
+			const {coll, _docId, fld} = this.props;
+			Axios.post('/upd_docsbucket/del_img', {coll:coll, _docId:_docId, fld:fld, _imgId:img._id, filenameM:img.filenameM, filenameL:img.filenameL}).then((resp) => {
+				this.remove_img(idx);
+			});
+		}
 	}
 
 	remove_img (idx) {
@@ -104,7 +111,7 @@ class UpdDocsBucket extends Component {
 		Axios.post('/upd_docsbucket/upd_seq', {coll:coll, _docId:_docId, fld:fld, idx:idx, mov:mov}).then((resp) => {
 			//console.log(resp.data);
 			this.setState({imgs:resp.data});
-		})
+		});
 	}
 
 	render () {
@@ -116,18 +123,14 @@ class UpdDocsBucket extends Component {
 			<div className="UpdImgs">
 				<div className="updImgsItems">
 					{this.state.imgs.map((img, idx) => (
-						<div className="updImgsItem" key={idx}>
-							{img.urlS ? (
-								<img className="updImgsView" src={img.urlS} />
-								) : (
-								<img className="updImgsView" src={img.urlM} />
-								)
-							}
+						<div className="updImgsItem30" key={idx}>
+							<img className="updImgsView" src={img.urlM} />
 							<div className="updImgsId">_id: {img._id}</div>
 							<div className="updImgsMovs">
 								<div className="updImgsMov" onClick={() => this.upd_seq(idx, -1)}>{'<<<'}</div>
 								<div className="updImgsMov" onClick={() => this.upd_seq(idx, 1)}>{'>>>'}</div>
 							</div>
+							<div className="updImgsOpen" onClick={() => this.find_img(img, idx)}>檢視</div>
 							<div className="updImgsDel" onClick={() => this.del_img(img, idx)}>刪除</div>
 						</div>
 					))}
