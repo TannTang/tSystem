@@ -90,9 +90,9 @@ module.exports = (sheetColls, db) => {
 		let refEmbed = sheetColls[req.body.coll].fields[req.body.fld].upd.refEmbed;
 		let setType = sheetColls[req.body.coll].fields[req.body.fld].upd.setType;
 
-		img['referenceCollectionKey'] = req.body.coll;
+		img['referenceCollection'] = req.body.coll;
 		img['_referenceDocumentId'] = new ObjId(req.body._docId);
-		img['referenceFieldKey'] = req.body.fld;
+		img['referenceField'] = req.body.fld;
 		img['type'] = setType;
 		img['scale'] = req.body.scale;
 		img['fileName'] = req.file.filename;
@@ -128,9 +128,9 @@ module.exports = (sheetColls, db) => {
 							let insResult = await db.collection('images').insertOne(img);
 							let	newImg = insResult.ops[0];
 
-							let refColl = newImg.referenceCollectionKey;
+							let refColl = newImg.referenceCollection;
 							let _refDocId = newImg._referenceDocumentId;
-							let refFld = newImg.referenceFieldKey;
+							let refFld = newImg.referenceField;
 							
 							let doc = await db.collection(refColl).findOne({_id:_refDocId});
 

@@ -5,13 +5,13 @@ module.exports = (sheetColls, db) => {
 
 	const router = Express.Router();
 
-	function orderResult2(result, queryIds) {
+	/*function orderResult2(result, queryIds) {
 		let hashResult = result.reduce((prev, current) => {
 			prev[current._id] = current;
 			return prev;
 		}, {});
 		return queryIds.map((id) => {return hashResult[id]});
-	}
+	}*/
 
 	function orderResult(result, objs) {
 		let hashResult = result.reduce((prev, current) => {
@@ -97,6 +97,7 @@ module.exports = (sheetColls, db) => {
 		let _refDocId = new ObjId(req.body._refDocId);
 
 		let twoWay = sheetColls[coll].fields[fld].upd.twoWay;
+		let bridge = sheetColls[coll].fields[fld].upd.bridge;
 		let refColl = sheetColls[coll].fields[fld].upd.refColl;
 		let refFld = sheetColls[coll].fields[fld].upd.refFld;
 		let refFind = sheetColls[coll].fields[fld].upd.refFind;
@@ -108,6 +109,19 @@ module.exports = (sheetColls, db) => {
 		if (twoWay) {
 			let embed = sheetColls[refColl].fields[refFld].upd.refEmbed;
 			await replace_refDocs(refColl, coll, refFld, fld, _refDocId, _docId, embed, 'add');
+		}
+		
+		if (bridge) {
+			let bridgeColl = sheetColls[coll].fields[fld].upd.bridgeColl;
+			let bridgeFldA = sheetColls[coll].fields[fld].upd.bridgeFldA;
+			let bridgeFldB = sheetColls[coll].fields[fld].upd.bridgeFldB;
+
+			let insBridge = {};
+			insBridge[bridgeFldA] = {_id:_docId};
+			insBridge[bridgeFldB] = {_id:_refDocId};
+
+			let insResult = await db.collection(bridgeColl).insertOne(insBridge);
+			//console.log(insResult.ops[0]);
 		}
 
 		separate_refDocs (refColl, refFind, refProject, _refObjs).then((result) => {
@@ -122,6 +136,7 @@ module.exports = (sheetColls, db) => {
 		let _refDocId = new ObjId(req.body._refDocId);
 
 		let twoWay = sheetColls[coll].fields[fld].upd.twoWay;
+		let bridge = sheetColls[coll].fields[fld].upd.bridge;
 		let refColl = sheetColls[coll].fields[fld].upd.refColl;
 		let refFld = sheetColls[coll].fields[fld].upd.refFld;
 		let refFind = sheetColls[coll].fields[fld].upd.refFind;
@@ -133,6 +148,19 @@ module.exports = (sheetColls, db) => {
 		if (twoWay) {
 			let embed = sheetColls[refColl].fields[refFld].upd.refEmbed;
 			await replace_refDocs(refColl, coll, refFld, fld, _refDocId, _docId, embed, 'remove');
+		}
+
+		if (bridge) {
+			let bridgeColl = sheetColls[coll].fields[fld].upd.bridgeColl;
+			let bridgeFldA = sheetColls[coll].fields[fld].upd.bridgeFldA;
+			let bridgeFldB = sheetColls[coll].fields[fld].upd.bridgeFldB;
+
+			let delBridge = {};
+			delBridge[bridgeFldA] = {_id:_docId};
+			delBridge[bridgeFldB] = {_id:_refDocId};
+
+			let delResult = await db.collection(bridgeColl).deleteOne(delBridge);
+			//console.log(delResult);
 		}
 
 		separate_refDocs (refColl, refFind, refProject, _refObjs).then((result) => {
