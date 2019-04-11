@@ -29,7 +29,7 @@ class FindDoc extends Component {
 					{Object.keys(doc).map((fldKey, idx) => (<FindDocFld key={idx} fld={flds[fldKey]} val={doc[fldKey]} />))}
 				</div>
 				<div className="findDocOptions">
-					<Link to={'/upd/'+ coll +'/'+ doc._id} target="_blank"><div className="findDocOption">開啟</div></Link>
+					<Link to={'/upd/'+ coll +'/'+ doc._id} target="_blank"><div className="findDocOption">編輯</div></Link>
 					<div className="findDocOption" onClick={() => del_doc(doc, idx)}>刪除</div>
 				</div>
 			</div>

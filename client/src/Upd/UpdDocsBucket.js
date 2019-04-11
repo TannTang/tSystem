@@ -123,7 +123,7 @@ class UpdDocsBucket extends Component {
 			<div className="UpdImgs">
 				<div className="updImgsItems">
 					{this.state.imgs.map((img, idx) => (
-						<div className="updImgsItem30" key={idx}>
+						<div className="updImgsItemBig" key={idx}>
 							<img className="updImgsView" src={img.urlM} />
 							<div className="updImgsId">_id: {img._id}</div>
 							<div className="updImgsMovs">

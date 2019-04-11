@@ -4,7 +4,7 @@ class UpdSel extends Component {
 	constructor (props) {
 		super (props);
 		this.state = {val:props.val, iFocus:false};
-		this.handler_chg = this.handler_chg.bind(this);
+		this.chg_opt = this.chg_opt.bind(this);
 	}
 
 	componentDidUpdate (prevProps) {
@@ -13,18 +13,18 @@ class UpdSel extends Component {
 		}
 	}
 
-	handler_chg (e) {
+	chg_opt (e) {
 		this.setState({val:e.target.value});
 		this.props.upd_fld(e.target.value);
 	}
 
 	render () {
-		
-		const options = this.props.sheetFld.upd.options;
+		const {val} = this.state;
+		const opts = this.props.sheetFld.upd.options;
 
 		return (
-			<select className="UpdSel" value={this.state.val} onChange={this.handler_chg} >
-				{options.map((option, idx) => (<option key={idx}>{option}</option>))}
+			<select className="UpdSel" value={val} onChange={this.chg_opt} >
+				{opts.map((opt, idx) => (<option key={idx} value={opt.val}>{opt.str}</option>))}
 			</select>
 		);
 	}

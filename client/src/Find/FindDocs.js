@@ -99,7 +99,6 @@ class FindDocs extends Component {
 		} else {
 
 		}
-		
 	}
 
 	render () {

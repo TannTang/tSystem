@@ -12,7 +12,7 @@ const uploads = Multer({dest:'uploads/'});
 const ascs = 'DefaultEndpointsProtocol=https;AccountName=youdu;AccountKey=/NeujD/MOD+Pfs6mTu43z6NrrlZoULU6/IEfJ4QWLDtQHrICIg4maua8LS+rVPZNqOJ9SbHe8eHioN7+r2jDHQ==;EndpointSuffix=core.windows.net';
 //const ascs = 'DefaultEndpointsProtocol=https;AccountName=shi;AccountKey=f6ObExk54WzwiIJydGPuPFRwLyLZVQGNq1wu9cVyzrtNB57CekwAWoUIcN/rzM2g3NDz+ZjNbyMsRvuONBHbuA==;EndpointSuffix=core.windows.net';
 const blobSvr = AzrStg.createBlobService(ascs);
-const blobContainer = 'youdu-imgs';
+const blobContainer = 'youdu-images';
 //const blobContainer = 'shiblb';
 blobSvr.createContainerIfNotExists(blobContainer, function (err) {
 	if (err) {

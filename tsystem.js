@@ -16,6 +16,9 @@ const Sheet = require('../youdu/DataSheet_youdu.js');
 const UpdImgsBlobRouter = require('./UpdImgsBlobRouter.js');
 const UpdDocsBucketRouter = require('./UpdDocsBucketRouter.js');
 const UpdRefsRouter = require('./UpdRefsRouter.js');
+const UpdMutiBlobRouter = require('./UpdMutiBlobRouter.js');
+const UpdImgsBlobEmbedRouter = require('./UpdImgsBlobEmbedRouter.js');
+
 //const UpdRefsBridgeRouter = require('./UpdRefsBridgeRouter.js');
 
 const dbURL = Sheet.db.url;
@@ -43,6 +46,8 @@ try {
 	app.use('/upd_imgsblob', UpdImgsBlobRouter(sheetColls, db));
 	app.use('/upd_docsbucket', UpdDocsBucketRouter(sheetColls, db));
 	app.use('/upd_refs', UpdRefsRouter(sheetColls, db));
+	app.use('/upd_mutiblob', UpdMutiBlobRouter(Sheet, db));
+	app.use('/updimgsblobembed', UpdImgsBlobEmbedRouter(Sheet, db));
 	//app.use('/upd_refsbridge', UpdRefsBridgeRouter(db));
 
 	function create_doc (coll) {
@@ -170,10 +175,12 @@ try {
 		for (let i=0; i<fldKeys.length; i++) {
 			if (flds[fldKeys[i]].ref) {
 				let doc = await db.collection(coll).findOne({_id:_docId});
-				if (doc[fldKeys[i]].length !== 0) {
-					//console.log(doc[fldKeys[i]]);
-					resp.send('have reference');
-					return;
+				if (doc[fldKeys[i]]) {
+					if (doc[fldKeys[i]].length !== 0) {
+						//console.log(doc[fldKeys[i]]);
+						resp.send('have reference');
+						return;
+					}
 				}
 				/*let rfrCllKy = flds[fldKeys[i]].reference.collection;
 				let rfrFld = flds[fldKeys[i]].reference.field;

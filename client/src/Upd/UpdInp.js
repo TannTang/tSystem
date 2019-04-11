@@ -15,6 +15,14 @@ class UpdInp extends Component {
 		}
 	}
 
+	isInt(n){
+		return Number(n) % 1 === 0;
+	}
+	
+	isFloat(n){
+		return Number(n) % 1 !== 0;
+	}
+
 	handler_chg (e) {
 		this.setState({val:e.target.value});
 	}
@@ -23,7 +31,12 @@ class UpdInp extends Component {
 		this._timeOutId = setTimeout(() => {
 			if (this.state.iFocus) {
 				this.setState({iFocus:false});
-				this.props.upd_fld(this.state.val);
+				let val = this.state.val;
+				if (this.props.type === 'number') {
+					val = Number(val);
+				}
+				console.log(typeof val);
+				this.props.upd_fld(val);
 			}
 		}, 0);
 	}

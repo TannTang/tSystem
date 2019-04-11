@@ -9,6 +9,8 @@ import UpdContentEditable from './UpdContentEditable.js';
 import UpdImgsBlob from './UpdImgsBlob.js';
 import UpdDocsBucket from './UpdDocsBucket.js';
 import UpdRefs from './UpdRefs.js';
+import UpdMutiBlob from './UpdMutiBlob.js';
+import UpdImgsBlobEmbed from './UpdImgsBlobEmbed.js';
 //import UpdRefsBridge from './UpdRefsBridge.js';
 
 class UpdFld extends Component {
@@ -45,6 +47,8 @@ class UpdFld extends Component {
 			case 'updImgsBlob': updComponent = <UpdImgsBlob coll={coll} fld={fld} _docId={_docId}/* setObj={sheetFld.upd.set} refEmbed={sheetFld.upd.refEmbed} *//>; break;
 			case 'updDocsBucket': updComponent = <UpdDocsBucket coll={coll} fld={fld} _docId={_docId} />; break;
 			case 'updRefs': updComponent = <UpdRefs coll={coll} fld={fld} _docId={_docId} />; break;
+			case 'updMutiBlob': updComponent = <UpdMutiBlob coll={coll} fld={fld} _docId={_docId} />; break;
+			case 'updImgsBlobEmbed': updComponent = <UpdImgsBlobEmbed coll={coll} fld={fld} _docId={_docId} />; break;
 			//case 'updRefsBridge': updComponent = <UpdRefsBridge coll={coll} fld={fld} _docId={_docId} />; break;
 			default: updComponent = <div className="updNull">{val}</div>; break;
 		}
