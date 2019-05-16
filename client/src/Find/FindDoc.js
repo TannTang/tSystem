@@ -7,6 +7,8 @@ class FindDocFld extends Component {
 		if (fld) {
 			if (val) {
 				val = val.toString();
+			} else if (val === false) {
+				val = 'false';
 			}
 			return (
 				<div className="FindDocFld">

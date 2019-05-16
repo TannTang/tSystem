@@ -15,7 +15,16 @@ class UpdSel extends Component {
 
 	chg_opt (e) {
 		this.setState({val:e.target.value});
-		this.props.upd_fld(e.target.value);
+	
+		let val = e.target.value;
+		if (val === 'false') {
+			val = false;
+		} else if (val === 'true') {
+			val = true;
+		}
+		console.log(typeof val);
+
+		this.props.upd_fld(val);
 	}
 
 	render () {
