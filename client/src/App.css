@@ -1,97 +1,94 @@
 @charset "utf-8";
-
 @import url('https://fonts.googleapis.com/css?family=Abel');
-
 *{border:none; background:none; border-collapse:collapse; outline:none; margin:0px; padding:0px; list-style:none; text-decoration-line:none;
 -webkit-appearance:none; -moz-appearance:none; appearance:none;
 -webkit-tap-highlight-color:rgba(0,0,0,0);
-font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:10pt;
+font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:12px; color:#000000;
 }
 
-.App{}
-.Top{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
-.Find{}
-.findTitle{border-bottom:1px #cccccc solid; text-align:center; padding:5px;}
+.findDatabase{text-align:center; border-bottom:1px #000000 solid; padding:4px;}
+.findTitle{border-bottom:1px #000000 solid; background-color:#dddddd; text-align:center; padding:4px;}
 
-.FindSel{display:flex; flex-direction:row; width:100%; border-bottom:1px #000000 solid;}
-.findOption{flex:auto; border-right:0px #000000 solid; background-color:#000000; text-align:center; color:#ffffff; padding:5px; margin:5px; cursor:pointer;}
+.findCollections{display:flex; width:100%; border-bottom:1px #000000 solid;}
+.findCollectionNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.findCollectionActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.findCollectionNormal:last-child{border-right:0px #000000 solid;}
+.findCollectionActive:last-child{border-right:0px #000000 solid;}
 
-.FindLst{}
+.findFields{display:flex; border-bottom:1px #000000 solid;}
+.findFieldNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.findFieldActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.findFieldNormal:last-child{border-right:0px #000000 solid;}
+.findFieldActive:last-child{border-right:0px #000000 solid;}
 
-.FindFilter{}
-.findFilterTitle{border-bottom:1px #cccccc solid; text-align:center; padding:5px;}
-.findFilterFlds{border-bottom:1px #000000 solid; display:flex; flex-direction:row;}
-.FindFilterFld{flex:auto; text-align:center; padding:5px; margin:5px; cursor:pointer;}
+.findInsert{border-bottom:1px #000000 solid; background-color:#0000ff; text-align:center; color:#ffffff; padding:4px; cursor:pointer;}
 
-.FindDocs{}
-.findDocsIns{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
-.findDocsInsOption{display:inline-block; background-color:#0000ff; color:#ffffff; padding:5px; cursor:pointer;}
-
-.FindDoc{display:flex; flex-direction:row; border-bottom:1px #000000 solid; width:100%;}
-/*.findDocId{border-right:1px #cccccc solid; color:#0000ff; padding:5px;}*/
-.findDocFlds{display:flex; flex-direction:row; width:90%;}
-
-.FindDocFld{display:flex; flex:auto; flex-basis:0; border:1px #cccccc solid; padding:5px; margin:5px;}
-/*.findDocFldCnt{display:flex; border:1px #cccccc solid; padding:5px; margin:5px;}*/
-.findDocFldLabel{color:#999999;}
-.findDocFldVal{color:#000000; margin-left:5px;}
-
-.findDocOptions{width:10%; border-left:1px #000000 solid;}
-.findDocOption{display:inline-block; background-color:#0000ff; text-align:center; color:#ffffff; padding:5px; margin:5px; cursor:pointer;}
-
-.Upd{}
-.updId{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
-
-.UpdFld{display:flex; flex-direction:row; border-bottom:1px #000000 solid;}
-.updFldLabel{border-right:1px #000000 solid; width:10%; padding:5px;}
-.updFldVal{width:90%; padding:5px;}
-
-.updNull{padding:5px;}
-
-.UpdInp{border:1px #cccccc solid; width:50%; padding:5px;}
-.UpdInps{border:1px #cccccc solid; padding:5px;}
-
-.updInpsSub{margin-bottom:5px;}
-.updInpsAdd{border:1px #0000ff solid; background-color:#0000ff; color:#ffffff; width:50%; text-align:center; padding:5px; cursor:pointer;}
-.updInpsRemove{border:1px #cccccc solid; background-color:#cccccc; width:50%; text-align:center; padding:5px; cursor:pointer;}
-
-.UpdTxtArea{border:1px #cccccc solid; width:50%; padding:5px;}
-
-.UpdSel{border:1px #cccccc solid; width:50%; padding:5px; cursor:pointer;}
-
-.UpdContentEditable{border:1px #cccccc solid; width:50%; padding:5px;}
-
-.UpdImgs{border:1px #cccccc solid; padding:5px;}
-.updImgsFile{border:1px #cccccc solid; background-color:#cccccc; text-align:left; padding:5px; margin-bottom:5px; cursor:pointer;}
-.updImgsInfo{border:1px #ff2222 solid; background-color:#ff2222; color:#ffffff; text-align:left; padding:5px; cursor:pointer;}
-.updImgsIns{border:1px #2222ff solid; background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; margin-top:5px; cursor:pointer;}
-.updImgsItems{display:flex; flex-wrap:wrap; align-items:flex-end; margin-bottom:5px;}
-.updImgsItem{width:10%; flex-basis:10%; border:1px #cccccc solid; padding:5px; margin-right:5px;}
-.updImgsItemBig{width:30%; flex-basis:30%; border:1px #cccccc solid; padding:5px; margin-right:5px;}
-.updImgsId{word-break:break-all; padding:5px;}
-.updImgsView{width:100%;}
-.updImgsMovs{display:flex; margin-bottom:5px;}
-.updImgsMov{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-right:0px; cursor:pointer;}
-.updImgsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
-.updImgsOpen{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; margin-bottom:5px; cursor:pointer;}
-.updImgsDel{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; cursor:pointer;}
-
-.UpdRefs{border:1px #cccccc solid; padding:5px;}
-.updRefsBlk{display:flex; flex-direction:row; flex-wrap:wrap; border:1px #cccccc solid; padding:5px;}
-.updRefsRef{flex-basis:15%; border:1px #cccccc solid; padding:5px; margin-right:5px; margin-bottom:5px;}
-.updRefsFlds{}
-.updRefsFld{border-bottom:1px #cccccc solid; padding:5px;}
-
-.updRefsBtns{display:flex;}
-.updRefsMov{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-right:0px; cursor:pointer;}
-.updRefsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:0px; cursor:pointer;}
-.updRefsCancel{flex:auto; background-color:#2222ff; text-align:center; color:#ffffff; padding:5px; cursor:pointer;}
-.updRefsSel{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; cursor:pointer;}
+.findDocuments{}
+.findDocument{display:flex; border-bottom:1px #000000 solid;}
+.findDocumentNumber{flex-basis:20px; border-right:1px #000000 solid; padding:4px;}
+.findDocumentField{flex:1; border-right:1px #000000 solid; padding:4px;}
+.findDocumentField:last-child{border-right:0px #000000 solid;}
+.findDocumentFieldKey{color:#888888;}
+.findDocumentFieldValue{}
+.findDocumentEdit{display:block; border-right:1px #000000 solid; background-color:#dddddd; padding:4px; cursor:pointer;}
+.findDocumentDelete{display:block; background-color:#dddddd; padding:4px; cursor:pointer;}
 
 
-.UpdMuti{}
-.updMutiBtns{display:flex; border:1px #cccccc solid; padding-right:5px; padding-top:5px; padding-bottom:5px;}
-.updMutiBtn{flex:1; background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
+.updateTitle{background-color:#000000; text-align:center; color:#ffffff; padding:4px;}
+.updateField{display:flex; border-bottom:1px #000000 solid; padding:4px;}
+.updateLabel{flex-basis:120px; border-right:1px #dddddd solid; padding:4px; margin-right:4px;}
+.updateMethod{flex-basis:80px; border-right:1px #dddddd solid; color:#2222ff; padding:4px; margin-right:4px;}
+.updateReadOnly{padding:4px;}
+.updateInput{flex-basis:600px; border:1px #dddddd solid; padding:4px;}
+.updateTextArea{flex-basis:600px; border:1px #dddddd solid; padding:4px;}
+.updateSelect{flex-basis:610px; border:1px #dddddd solid; padding:4px;}
+.updateEditText{flex-basis:600px; border:1px #dddddd solid; padding:4px;}
+
+
+.updateInputTexts{flex-basis:650px;}
+.updateInputTextsItem{display:flex; flex:1; margin-bottom:4px;}
+.updateInputTextsItemDelete{background-color:#dddddd; text-align:center; padding:4px; cursor:pointer;}
+.updateInputTextsInsert{width:200px; background-color:#2222ff; color:#ffffff; text-align:center; padding:4px; cursor:pointer;}
+
+
+.updateStatus{color:#888888; padding:4px;}
+
+
+.updateReference{flex-basis:1600px;}
+.updateReferenceLabel{margin-bottom:4px;}
+.updateReferenceItems{display:flex; flex-wrap:wrap; border-bottom:1px #dddddd solid; margin-bottom:4px;}
+.updateReferenceItem{flex-basis:10%; border:1px #dddddd solid; margin-right:4px; margin-bottom:4px;}
+.updateReferenceValue{border-bottom:1px #dddddd solid; padding:4px;}
+.updateReferenceSelect{background-color:#dddddd; color:#000000; text-align:center; padding:4px; cursor:pointer;}
+.updateReferenceDelete{background-color:#dddddd; color:#000000; text-align:center; padding:4px; cursor:pointer;}
+
+
+.updateImages{flex-basis:1600px;}
+.updateImagesFile{background-color:#dddddd; text-align:left; padding:4px; cursor:pointer;}
+.updateImagesInfo{padding:4px;}
+.updateImagesInsert{width:200px; background-color:#dddddd; color:#000000; text-align:center; padding:4px; cursor:pointer;}
+
+
+.updateImageItems{display:flex; flex-wrap:wrap; margin-bottom:4px;}
+.updateImageItem{flex-basis:10%; border:1px#dddddd solid; margin-right:4px;}
+.updateImageItemView{border-bottom:1px#dddddd solid; width:100%; padding-top:100%; background-size:contain; background-position:center; background-repeat:no-repeat;}
+.updateImageItemId{border-bottom:1px #dddddd solid; word-break:break-all; padding:4px;}
+.updateImageOptions{display:flex;}
+.updateImageDelete{flex:1; background-color:#dddddd; color:#000000; text-align:center; padding:4px; cursor:pointer;}
+.updateImageForward{flex:1; border-right:1px#dddddd solid; text-align:center; padding:4px; cursor:pointer;}
+.updateImageAfterward{flex:1; text-align:center; padding:4px; cursor:pointer;}
+
+
+.updateMultiple{flex-basis:1600px;}
+.updateMultipleItem{border:1px #dddddd solid; padding:4px; margin-bottom:20px;}
+.updateMultipleItemOptions{display:flex; flex-basis:600px; margin-top:4px;}
+.updateMultipleItemDelete{flex:1; background-color:#dddddd; color:#000000; text-align:center; padding:4px; margin-right:4px; cursor:pointer;}
+.updateMultipleItemUpward{flex:1; background-color:#dddddd; color:#000000; text-align:center; padding:4px; margin-right:4px; cursor:pointer;}
+.updateMultipleItemDownward{flex:1; background-color:#dddddd; color:#000000; text-align:center; padding:4px; cursor:pointer;}
+.updateMultipleOptions{display:flex;}
+.updateMultipleOption{flex:1; background-color:#dddddd; color:#000000; text-align:center; padding:4px; margin-right:4px; cursor:pointer;}
+.updateMultipleOption:last-child{margin-left:0px;}
+
 
 .UpdMutiInp{border:1px #cccccc solid; padding:5px; margin-bottom:5px;}
 .updMutiInpBlk{border:1px #cccccc solid; padding:5px; margin-bottom:5px;}
@@ -100,3 +97,35 @@ font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:10pt;
 .updMutiInpBtns{display:flex; border:1px #cccccc solid; padding-right:5px; padding-top:5px; padding-bottom:5px;}
 .updMutiInpMov{flex:1; background-color:#cccccc; color:#000000; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
 .updMutiInpDel{flex:1; background-color:#ff2222; color:#ffffff; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
+
+
+/*
+.updRefsBtns{display:flex;}
+.updRefsMov{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-right:0px; cursor:pointer;}
+.updRefsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:0px; cursor:pointer;}
+.updRefsCancel{flex:auto; background-color:#2222ff; text-align:center; color:#ffffff; padding:5px; cursor:pointer;}
+*/
+
+/*
+.updImgsItemBig{width:30%; flex-basis:30%; border:1px #cccccc solid; padding:5px; margin-right:5px;}
+.updImgsMov{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-right:0px; cursor:pointer;}
+.updImgsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
+.updImgsOpen{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; margin-bottom:5px; cursor:pointer;}
+.updImgsDel{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; cursor:pointer;}
+*/
+
+/*
+.FindDocs{}
+.findDocsIns{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
+.findDocsInsOption{display:inline-block; background-color:#0000ff; color:#ffffff; padding:5px; cursor:pointer;}
+.FindDoc{display:flex; flex-direction:row; border-bottom:1px #000000 solid; width:100%;}
+.findDocFlds{display:flex; flex-direction:row; width:90%;}
+.FindDocFld{display:flex; flex:auto; flex-basis:0; border:1px #cccccc solid; padding:5px; margin:5px;}
+.findDocFldLabel{color:#999999;}
+.findDocFldVal{color:#000000; margin-left:5px;}
+.findDocOptions{width:10%; border-left:1px #000000 solid;}
+.findDocOption{display:inline-block; background-color:#0000ff; text-align:center; color:#ffffff; padding:5px; margin:5px; cursor:pointer;}
+
+.updFldLabel{border-right:1px #000000 solid; width:10%; padding:5px;}
+.updFldVal{width:90%; padding:5px;}
+*/
