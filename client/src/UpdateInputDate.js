@@ -29,11 +29,14 @@ export default class UpdateInputDate extends Component {
     }
     
     blur () {
-		const {fieldKey, update_field} = this.props
+		const {fieldKey, update_date} = this.props
 		const {value} = this.state
 		this._timeOutId = setTimeout(() => {
 			if (this.state.isFocus) {
-				update_field(fieldKey, value)
+				let date = new Date(value)
+				if (date) {
+					update_date(fieldKey, date.toISOString())
+				}
                 this.setState({isFocus:false})
 			}
 		}, 0)

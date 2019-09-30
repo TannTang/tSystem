@@ -25,7 +25,7 @@ export default class Update extends Component {
 		}
 
 		this.update_field = this.update_field.bind(this)
-
+		this.update_date = this.update_date.bind(this)
 		//this.upd_docPss = this.upd_docPss.bind(this)
 
 		this.find_document()
@@ -51,6 +51,26 @@ export default class Update extends Component {
 		let setObject = {}
 		setObject[fieldKey] = value
 		Axios.post('/update_field', {collection:collection, _id:_id, setObject:setObject}).then((response) => {
+			if (response.data) {
+				document[fieldKey] = value
+				statuss[fieldKey] = 'updated'
+				this.setState({
+					statuss:statuss
+				})
+			}
+		})
+	}
+
+	update_date (fieldKey, value) {
+		const {collection, _id} = this.props.match.params
+		let {document, statuss} = this.state
+
+		statuss[fieldKey] = 'updating ...'
+		this.setState({statuss:statuss})
+
+		//let setObject = {}
+		//setObject[fieldKey] = value
+		Axios.post('/update_date', {collection:collection, fieldKey:fieldKey, _id:_id, date:value}).then((response) => {
 			if (response.data) {
 				document[fieldKey] = value
 				statuss[fieldKey] = 'updated'
@@ -97,7 +117,7 @@ export default class Update extends Component {
 									updateComponent = <UpdateInputNumber value={value} fieldKey={fieldKey} update_field={this.update_field} />
 									break
 								case 'inputDate':
-									updateComponent = <UpdateInputDate value={value} fieldKey={fieldKey} update_field={this.update_field} />
+									updateComponent = <UpdateInputDate value={value} fieldKey={fieldKey} update_date={this.update_date} />
 									break
 								case 'textArea':
 									updateComponent = <UpdateTextArea value={value} fieldKey={fieldKey} update_field={this.update_field} />

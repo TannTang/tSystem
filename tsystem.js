@@ -240,14 +240,29 @@ try {
 		}
 	})
 
+	app.post ('/update_date', async (request, response) => {
+		let collection = request.body.collection
+		let fieldKey = request.body.fieldKey
+		let _id = request.body._id
+		let date = request.body.date
+
+		let set = {}
+		set[fieldKey] = new Date(date)
+		let updateObject = await db.collection(collection).updateOne({_id:new ObjectId(_id)}, {$set:set})
+		let result = updateObject.result
+		if (result.n === 0) {
+			response.send(false)
+		} else {
+			response.send(true)
+		}
+	})
 
 
 
 
 
 
-
-
+	/*
 	app.post('/find_docs', async (request, response) => {
 		let coll = request.body.coll
 		let filters = request.body.filters
@@ -269,7 +284,7 @@ try {
 		let newDcm = await db.collection(coll).findOneAndUpdate({_id:_docId}, {$set:obj}, {returnOriginal:false})
 		response.send(newDcm.value)
 	})
-
+	*/
 	app.post ('/upd_docPss', async (request, response) => {
 		let coll = request.body.coll
 		let _docId = new ObjectId(request.body._docId)
