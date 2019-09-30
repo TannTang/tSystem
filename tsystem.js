@@ -257,11 +257,6 @@ try {
 		}
 	})
 
-
-
-
-
-
 	/*
 	app.post('/find_docs', async (request, response) => {
 		let coll = request.body.coll
