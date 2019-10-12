@@ -11,6 +11,7 @@ const Crypto = require('crypto')
 const Sheet = require('../youdu/DataSheet_youdu.js')
 //const Sheet = require('../murmur/DataSheet_murmur.js')
 
+const tAdministrators = require('./tAdministrators.js')
 const UpdateReference = require('./UpdateReference.js')
 const UpdateImagesBlob = require('./UpdateImagesBlob.js')
 const UpdateMultipleBlob = require('./UpdateMultipleBlob.js')
@@ -48,6 +49,7 @@ try {
 		extended: true
 	}))
 	app.use(Express.static(Path.join(__dirname, 'client/build')))
+	app.use('/tAdministrators', tAdministrators(db))
 	app.use('/update_reference', UpdateReference(db))
 	app.use('/update_images_blob', UpdateImagesBlob(db, ascs, blobContainer))
 	app.use('/update_multiple_blob', UpdateMultipleBlob(db, ascs, blobContainer))
@@ -129,55 +131,47 @@ try {
 		response.send(Sheet)
 	})
 
-	app.post ('/find_collection', async (request, response) => {
+	app.post ('/find_projection', async (request, response) => {
 		let collection = request.body.collection
-
-		let filter = await db.collection('filters').findOne({collection:collection})
-
-		if (!filter) {
-			filter = create_document('filters')
-			let fieldKeys = Object.keys(collections[collection].fields)
-			let fields = []
-			for (let i=0; i<fieldKeys.length; i++) {
-				fields[i] = {
-					key: fieldKeys[i],
-					enable: false,
-				}
-			}
-			filter.collection = collection
-			filter.fields = fields
-			let filterResult = await db.collection('filters').insertOne(filter)
-			filter = filterResult.ops[0]
-		}
-
-		let projectionObject = {}
-		filter.fields.map((field) => {
-			if (field.enable) {
-				projectionObject[field.key] = 1
-			}
-		})
-		let documents = await db.collection(collection).find({}, {projection:projectionObject}).sort({insertTime:-1}).limit(50).toArray()
-
-		response.send({documents:documents, filter:filter})
+		let projection = await db.collection('projections').findOne({collection:collection})
+		response.send(projection)
 	})
 
-	app.post ('/update_filter', async (request, response) => {
+	app.post ('/change_find', async (request, response) => {
 		let collection = request.body.collection
-		let fieldKey = request.body.fieldKey
-		let fieldEnable = request.body.fieldEnable
+		let find = request.body.find
+		let projection = request.body.projection
 
-		let filterResult = await db.collection('filters').findOneAndUpdate({collection:collection, 'fields.key':fieldKey}, {$set:{'fields.$.enable':fieldEnable}}, {returnOriginal:false})
-		let newFilter = filterResult.value
+		let documents = await db.collection(collection).find(find, {projection:projection}).sort({insertTime:-1}).limit(50).toArray()
+		response.send(documents)
+	})
 
-		let projectionObject = {}
-		newFilter.fields.map((field) => {
-			if (field.enable) {
-				projectionObject[field.key] = 1
-			}
-		})
+	app.post ('/change_sort', async (request, response) => {
+		let collection = request.body.collection
+		let find = request.body.find
+		let projection = request.body.projection
+		let sort = request.body.sort
+		let limit = request.body.limit
 
-		let documents = await db.collection(collection).find({}, {projection:projectionObject}).sort({insertTime:-1}).limit(50).toArray()
-		response.send({documents:documents, filter:newFilter})
+		let documents = await db.collection(collection).find(find, {projection:projection}).sort(sort).limit(limit).toArray()
+		response.send(documents)
+	})
+
+	app.post ('/update_projection', async (request, response) => {
+		let collection = request.body.collection
+		let projection = request.body.projection
+		let projectionResult = await db.collection('projections').findOneAndUpdate({collection:collection}, {$set:{projection:projection}}, {upsert:true, returnOriginal:false})
+		let newProjection = projectionResult.value
+		response.send(newProjection)
+	})
+
+	app.post ('/find_documents', async (request, response) => {
+		let collection = request.body.collection
+		let find = request.body.find
+		let sort = request.body.sort
+		let projection = request.body.projection
+		let documents = await db.collection(collection).find(find, {projection:projection}).sort(sort).limit(50).toArray()
+		response.send(documents)
 	})
 	
 	app.post('/find_document', async (request, response) => {
@@ -192,7 +186,7 @@ try {
 		let document = create_document(collection)
 		let insertResult = await db.collection(collection).insertOne(document)
 		let newDocument = insertResult.ops[0]
-		response.send(newDocument) 
+		response.send(newDocument)
 	})
 
 	app.post('/delete_document', async (request, response) => {
@@ -257,29 +251,6 @@ try {
 		}
 	})
 
-	/*
-	app.post('/find_docs', async (request, response) => {
-		let coll = request.body.coll
-		let filters = request.body.filters
-		let projectObj = {}
-		for (let i=0; i<filters.length; i++) {
-			if (filters[i].boolean) {
-				projectObj[filters[i].key] = 1
-			}
-		}
-		let docs = await db.collection(coll).find({}).project(projectObj).toArray()
-		response.send(docs)
-	})
-
-	app.post ('/upd_doc', async (request, response) => {
-		let coll = request.body.coll
-		let _docId = new ObjectId(request.body._docId)
-		let obj = request.body.obj
-		//console.log(coll+', '+_id)
-		let newDcm = await db.collection(coll).findOneAndUpdate({_id:_docId}, {$set:obj}, {returnOriginal:false})
-		response.send(newDcm.value)
-	})
-	*/
 	app.post ('/upd_docPss', async (request, response) => {
 		let coll = request.body.coll
 		let _docId = new ObjectId(request.body._docId)
@@ -295,42 +266,6 @@ try {
 		response.send(newDcm.value)
 	})
 
-	app.post('/del_doc', async (request, response) => {
-		let coll = request.body.coll
-		let _docId = new ObjectId(request.body._docId)
-		let flds = sheetColls[coll].fields
-		let fldKeys = Object.keys(flds)
-
-		for (let i=0; i<fldKeys.length; i++) {
-			if (flds[fldKeys[i]].ref) {
-				let doc = await db.collection(coll).findOne({_id:_docId})
-				if (doc[fldKeys[i]]) {
-					if (doc[fldKeys[i]].length !== 0) {
-						//console.log(doc[fldKeys[i]])
-						response.send('have reference')
-						return
-					}
-				}
-				/*let rfrCllKy = flds[fldKeys[i]].reference.collection
-				let rfrFld = flds[fldKeys[i]].reference.field
-				let findObj = {}
-				findObj[rfrFld] = _docId
-
-				if (rfrCllKy === 'images') {
-					let imgs = await db.collection('images').find(findObj).toArray()
-					if (imgs.length !== 0) {
-						response.send('images')
-						return
-					}
-				}
-				await db.collection(rfrCllKy).deleteMany(findObj)*/
-			}
-		}
-		await db.collection(coll).deleteOne({_id:_docId}, (error, dbRsp) => {
-			response.send(dbRsp)
-		})
-	})
-
 	app.listen(5000, () => {
 		console.log('http server listenin g on 5000')
 	})
@@ -342,3 +277,42 @@ try {
 }
 
 tsystem()
+
+
+
+
+
+
+
+
+/*app.post ('/find_collection', async (request, response) => {
+		let collection = request.body.collection
+		let find = request.body.find
+		let filter = await db.collection('filters').findOne({collection:collection})
+
+		if (!filter) {
+			filter = create_document('filters')
+			let fieldKeys = Object.keys(collections[collection].fields)
+			let fields = []
+			for (let i=0; i<fieldKeys.length; i++) {
+				fields[i] = {
+					key: fieldKeys[i],
+					enable: false,
+				}
+			}
+			filter.collection = collection
+			filter.fields = fields
+			let filterResult = await db.collection('filters').insertOne(filter)
+			filter = filterResult.ops[0]
+		}
+
+		let projectionObject = {}
+		filter.fields.map((field) => {
+			if (field.enable) {
+				projectionObject[field.key] = 1
+			}
+		})
+		let documents = await db.collection(collection).find(find, {projection:projectionObject}).sort({insertTime:-1}).limit(50).toArray()
+
+		response.send({documents:documents, filter:filter})
+	})*/

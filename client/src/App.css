@@ -6,32 +6,56 @@
 font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:12px; color:#000000;
 }
 
-.findDatabase{text-align:center; border-bottom:1px #000000 solid; padding:4px;}
-.findTitle{border-bottom:1px #000000 solid; background-color:#dddddd; text-align:center; padding:4px;}
+.top{display:flex; border-bottom:1px #000000 solid; padding:4px;}
+.database{flex-grow:1; text-align:center; padding:4px;}
+.signOut{flex-basis:40px; border:1px #000000 solid; text-align:center; padding:4px; cursor:pointer;}
 
-.findCollections{display:flex; width:100%; border-bottom:1px #000000 solid;}
-.findCollectionNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; text-align:center; color:#000000; padding:4px; cursor:pointer;}
-.findCollectionActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; text-align:center; color:#000000; padding:4px; cursor:pointer;}
-.findCollectionNormal:last-child{border-right:0px #000000 solid;}
-.findCollectionActive:last-child{border-right:0px #000000 solid;}
 
-.findFields{display:flex; border-bottom:1px #000000 solid;}
-.findFieldNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; text-align:center; color:#000000; padding:4px; cursor:pointer;}
-.findFieldActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; text-align:center; color:#000000; padding:4px; cursor:pointer;}
-.findFieldNormal:last-child{border-right:0px #000000 solid;}
-.findFieldActive:last-child{border-right:0px #000000 solid;}
+.queryTitle{border-bottom:1px #000000 solid; background-color:#bbbbbb; text-align:center; padding:4px;}
 
-.findInsert{border-bottom:1px #000000 solid; background-color:#0000ff; text-align:center; color:#ffffff; padding:4px; cursor:pointer;}
+.queryCollections{display:flex; width:100%; border-bottom:1px #000000 solid;}
+.queryCollectionNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.queryCollectionActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.queryCollectionNormal:last-child{border-right:0px #000000 solid;}
+.queryCollectionActive:last-child{border-right:0px #000000 solid;}
 
-.findDocuments{}
-.findDocument{display:flex; border-bottom:1px #000000 solid;}
-.findDocumentNumber{flex-basis:20px; border-right:1px #000000 solid; padding:4px;}
-.findDocumentField{flex:1; border-right:1px #000000 solid; padding:4px;}
-.findDocumentField:last-child{border-right:0px #000000 solid;}
-.findDocumentFieldKey{color:#888888;}
-.findDocumentFieldValue{}
-.findDocumentEdit{display:block; border-right:1px #000000 solid; background-color:#dddddd; padding:4px; cursor:pointer;}
-.findDocumentDelete{display:block; background-color:#dddddd; padding:4px; cursor:pointer;}
+
+.queryFind{display:flex; border-bottom:1px #000000 solid;}
+.queryFindNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.queryFindActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.queryFindNormal:last-child{border-right:0px #000000 solid;}
+.queryFindActive:last-child{border-right:0px #000000 solid;}
+
+
+.querySort{display:flex; border-bottom:1px #000000 solid;}
+.querySortNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.querySortActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.querySortNormal:last-child{border-right:0px #000000 solid;}
+.querySortActive:last-child{border-right:0px #000000 solid;}
+
+
+.queryProjections{display:flex; border-bottom:1px #000000 solid;}
+.queryProjectionNormal{flex:1; border-right:1px #000000 solid; background-color:#ffffff; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.queryProjectionActive{flex:1; border-right:1px #000000 solid; background-color:#dddddd; word-break:break-all; text-align:center; color:#000000; padding:4px; cursor:pointer;}
+.queryProjectionNormal:last-child{border-right:0px #000000 solid;}
+.queryProjectionActive:last-child{border-right:0px #000000 solid;}
+
+
+.queryOptions{display:flex; border-bottom:1px #000000 solid; padding:4px;}
+.queryOption{flex-grow:1; background-color:#88bbff; text-align:center; padding:4px; margin-right:4px; cursor:pointer;}
+.queryOption:last-child{margin-right:0px;}
+
+
+.queryTips{border-bottom:1px #000000 solid; text-align:center; color:#990000; padding:4px;}
+.queryDocuments{}
+.queryDocument{display:flex; border-bottom:1px #000000 solid;}
+.queryDocumentNumber{flex-basis:20px; border-right:1px #000000 solid; padding:4px;}
+.queryDocumentField{flex:1; border-right:1px #000000 solid; padding:4px;}
+.queryDocumentField:last-child{border-right:0px #000000 solid;}
+.queryDocumentFieldKey{word-break:break-all; color:#888888;}
+.queryDocumentFieldValue{word-break:break-all; }
+.queryDocumentEdit{display:block; border-right:1px #000000 solid; background-color:#dddddd; padding:4px; cursor:pointer;}
+.queryDocumentDelete{display:block; background-color:#dddddd; padding:4px; cursor:pointer;}
 
 
 .updateTitle{background-color:#000000; text-align:center; color:#ffffff; padding:4px;}
@@ -89,14 +113,28 @@ font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:12px; color:#0
 .updateMultipleOption{flex:1; background-color:#dddddd; color:#000000; text-align:center; padding:4px; margin-right:4px; cursor:pointer;}
 .updateMultipleOption:last-child{margin-left:0px;}
 
-
+/*
 .UpdMutiInp{border:1px #cccccc solid; padding:5px; margin-bottom:5px;}
 .updMutiInpBlk{border:1px #cccccc solid; padding:5px; margin-bottom:5px;}
 .updMutiInpType{border:0px #cccccc solid; background-color:#666666; color:#ffffff; padding:5px; margin-bottom:5px;}
+*/
 /*.updMutiInpTxt{border:1px #cccccc solid; padding:5px;}*/
+/*
 .updMutiInpBtns{display:flex; border:1px #cccccc solid; padding-right:5px; padding-top:5px; padding-bottom:5px;}
 .updMutiInpMov{flex:1; background-color:#cccccc; color:#000000; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
 .updMutiInpDel{flex:1; background-color:#ff2222; color:#ffffff; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
+*/
+
+
+
+.signIn{position:absolute; display:flex; justify-content:center; align-items:center; width:100%; height:100%;}
+.signInInner{display:flex; flex-wrap:wrap; justify-content:center; border:1px #000000 solid; flex-basis:425px; padding:4px; margin:8px;}
+.signInTitle{font-size:16px; margin-bottom:4px;}
+.signInInput{flex-basis:100%; border:1px #000000 solid; font-size:12px; padding:4px; margin-bottom:8px;}
+.signInOptions{display:flex; flex-basis:100%;}
+.signInOption{flex:1; background-color:#000000; text-align:center; color:#ffffff; padding:4px; margin-right:4px; cursor:pointer;}
+.signInOption:last-child{margin-right:0px;}
+
 
 
 /*
@@ -112,20 +150,4 @@ font-family: 'Abel', 'Microsoft JhengHei', 'Helvetica'; font-size:12px; color:#0
 .updImgsMov:last-Child{flex:auto; background-color:#cccccc; text-align:center; padding:5px; margin-left:5px; cursor:pointer;}
 .updImgsOpen{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; margin-bottom:5px; cursor:pointer;}
 .updImgsDel{background-color:#2222ff; color:#ffffff; text-align:center; padding:5px; cursor:pointer;}
-*/
-
-/*
-.FindDocs{}
-.findDocsIns{border-bottom:1px #000000 solid; text-align:center; padding:5px;}
-.findDocsInsOption{display:inline-block; background-color:#0000ff; color:#ffffff; padding:5px; cursor:pointer;}
-.FindDoc{display:flex; flex-direction:row; border-bottom:1px #000000 solid; width:100%;}
-.findDocFlds{display:flex; flex-direction:row; width:90%;}
-.FindDocFld{display:flex; flex:auto; flex-basis:0; border:1px #cccccc solid; padding:5px; margin:5px;}
-.findDocFldLabel{color:#999999;}
-.findDocFldVal{color:#000000; margin-left:5px;}
-.findDocOptions{width:10%; border-left:1px #000000 solid;}
-.findDocOption{display:inline-block; background-color:#0000ff; text-align:center; color:#ffffff; padding:5px; margin:5px; cursor:pointer;}
-
-.updFldLabel{border-right:1px #000000 solid; width:10%; padding:5px;}
-.updFldVal{width:90%; padding:5px;}
 */
