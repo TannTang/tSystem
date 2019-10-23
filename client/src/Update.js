@@ -68,8 +68,6 @@ export default class Update extends Component {
 		statuss[fieldKey] = 'updating ...'
 		this.setState({statuss:statuss})
 
-		//let setObject = {}
-		//setObject[fieldKey] = value
 		Axios.post('/update_date', {collection:collection, fieldKey:fieldKey, _id:_id, date:value}).then((response) => {
 			if (response.data) {
 				document[fieldKey] = value
@@ -104,40 +102,50 @@ export default class Update extends Component {
 						let label = fields[fieldKey].label.cn
 						let update = fields[fieldKey].update
 						let method = ''
+						let method_CN = ''
 						let updateComponent = null
 						let value = document[fieldKey]
-
 						if (update) {
 							method = update.method
 							switch (method) {
 								case 'inputText':
+									method_CN = '文字'
 									updateComponent = <UpdateInputText value={value} fieldKey={fieldKey} update_field={this.update_field} />
 									break
 								case 'inputNumber':
+									method_CN = '數字'
 									updateComponent = <UpdateInputNumber value={value} fieldKey={fieldKey} update_field={this.update_field} />
 									break
 								case 'inputDate':
+									method_CN = '日期'
 									updateComponent = <UpdateInputDate value={value} fieldKey={fieldKey} update_date={this.update_date} />
 									break
 								case 'textArea':
+									method_CN = '文字區塊'
 									updateComponent = <UpdateTextArea value={value} fieldKey={fieldKey} update_field={this.update_field} />
 									break
 								case 'select':
+									method_CN = '選項'
 									updateComponent = <UpdateSelect value={value} fieldKey={fieldKey} options={fields[fieldKey].update.options} update_field={this.update_field} />
 									break
 								case 'inputTexts':
+									method_CN = '多組文字'
 									updateComponent = <UpdateInputTexts value={value} fieldKey={fieldKey} update_field={this.update_field} />
 									break
 								case 'editText':
+									method_CN = '內文編輯'
 									updateComponent = <UpdateEditText value={value} fieldKey={fieldKey} update_field={this.update_field} />
 									break
 								case 'reference':
+									method_CN = '嵌入參考'
 									updateComponent = <UpdateReference value={value} collection={collection} fieldKey={fieldKey} _id={document._id} update={fields[fieldKey].update} update_field={this.update_field} />
 									break
 								case 'imagesBlob':
+									method_CN = '影像儲存容器(azure blob)'
 									updateComponent = <UpdateImagesBlob value={value} collection={collection} fieldKey={fieldKey} _id={document._id} _objectId={null} />
 									break
 								case 'multipleBlob':
+									method_CN = '複合內容'
 									updateComponent = <UpdateMultipleBlob value={value} collection={collection} fieldKey={fieldKey} _id={document._id} update_field={this.update_field} />
 									break
 								/*
@@ -165,7 +173,7 @@ export default class Update extends Component {
 						}
 						return <div className="updateField" key={index}>
 									<div className="updateLabel">{label+'('+fieldKey+')'}</div>
-									<div className="updateMethod">{method}</div>
+									<div className="updateMethod">{method}<br />{method_CN}</div>
 									{updateComponent}
 									<div className="updateStatus">{statuss[fieldKey]}</div>
 								</div>

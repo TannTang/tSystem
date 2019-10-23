@@ -25,10 +25,11 @@ export default class App extends Component {
 	authorize () {
 		Axios.post('/tAdministrators/authorize').then((response) => {
 			if (response.data) {
-				console.log('authenticated ---> true')
+				console.log('authorize --- true')
 				this.setState({tAdministrator:response.data})
 				this.find_sheet()
 			} else {
+				console.log('authorize --- false')
 				this.setState({tAdministrator:false})
 			}
 		}).catch((error) => {console.log(error)})

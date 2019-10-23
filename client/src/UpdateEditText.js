@@ -7,7 +7,9 @@ export default class UpdateEditText extends Component {
 		super (props)
 
 		let editorState = null
-		if (typeof props.value === 'object' && props.value.blocks) {
+		//console.log(typeof props.value)
+		//if (typeof props.value === 'object' && props.value.blocks) {
+		if (props.value) {
 			let contentState = convertFromRaw(props.value)
 			editorState = EditorState.createWithContent(contentState)
 		} else {
