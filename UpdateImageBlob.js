@@ -33,7 +33,7 @@ module.exports = (db, ascs, blobContainer) => {
 
 	const router = Express.Router()
 
-	router.post('/find_images', async (request, response) => {
+	router.post('/findOne_image', async (request, response) => {
 		let collection = request.body.collection
 		let fieldKey = request.body.fieldKey
 		let _id = request.body._id
@@ -42,7 +42,7 @@ module.exports = (db, ascs, blobContainer) => {
 		response.send(document[fieldKey])
 	})
 
-	router.post('/insert_image', uploads.single('file'), async (request, response) => {
+	router.post('/insertOne_image', uploads.single('file'), async (request, response) => {
 
 		let collection = request.body.collection
 		let fieldKey = request.body.fieldKey
@@ -54,6 +54,8 @@ module.exports = (db, ascs, blobContainer) => {
 
 		let _objectId = request.body._objectId
 
+		const pathM = request.file.path +'_M.jpg'
+		/*
 		const pathXS = request.file.path +'_XS.jpg'
 		const pathS = request.file.path +'_S.jpg'
 		const pathM = request.file.path +'_M.jpg'
@@ -64,19 +66,23 @@ module.exports = (db, ascs, blobContainer) => {
 		const filenameM = request.file.filename +'_M.jpg'
 		const filenameL = request.file.filename +'_L.jpg'
 		const filenameXL = request.file.filename +'_XL.jpg'
-
+		*/
+		await Sharp(path).resize(512, Math.round(  512 * scale)).toFormat('jpeg').toFile(pathM)
+		/*
 		await Sharp(path).resize(128, Math.round(  128 * scale)).toFormat('jpeg').toFile(pathXS)
 		await Sharp(path).resize(256, Math.round(  256 * scale)).toFormat('jpeg').toFile(pathS)
 		await Sharp(path).resize(512, Math.round(  512 * scale)).toFormat('jpeg').toFile(pathM)
 		await Sharp(path).resize(1024, Math.round(1024 * scale)).toFormat('jpeg').toFile(pathL)
 		await Sharp(path).resize(2048, Math.round(2048 * scale)).toFormat('jpeg').toFile(pathXL)
-
+		*/
+		await blobService.createBlockBlobFromLocalFile(blobContainer, filenameM, pathM, (error, resultM) => {})
+		/*
 		await blobService.createBlockBlobFromLocalFile(blobContainer, filenameXS, pathS, (error, resultXS) => {})
 		await blobService.createBlockBlobFromLocalFile(blobContainer, filenameS, pathS, (error, resultS) => {})
 		await blobService.createBlockBlobFromLocalFile(blobContainer, filenameM, pathM, (error, resultM) => {})
 		await blobService.createBlockBlobFromLocalFile(blobContainer, filenameL, pathL, (error, resultL) => {})
 		await blobService.createBlockBlobFromLocalFile(blobContainer, filenameXL, pathXL, (error, resultXL) => {})
-
+		*/
 		const url = blobService.getUrl(blobContainer, filename)
 
 		//console.log('scale --- '+ scale +' --- '+ typeof scale)
@@ -114,12 +120,15 @@ module.exports = (db, ascs, blobContainer) => {
 		}
 
 		Sharp.cache(false)
+		FS.unlink(pathM, (error) => {if (error) throw error})
+		/*
 		FS.unlink(path, (error) => {if (error) throw error})
 		FS.unlink(pathXS, (error) => {if (error) throw error})
 		FS.unlink(pathS, (error) => {if (error) throw error})
 		FS.unlink(pathM, (error) => {if (error) throw error})
 		FS.unlink(pathL, (error) => {if (error) throw error})
 		FS.unlink(pathXL, (error) => {if (error) throw error})
+		*/
 	})
 
 	router.post('/delete_image', async (request, response) => {
@@ -129,18 +138,22 @@ module.exports = (db, ascs, blobContainer) => {
 		let _imageId = request.body._imageId
 
 		const _objectId = request.body._objectId
-
+		let filenameM = request.body.filename +'_M.jpg'
+		/*
 		let filenameXS = request.body.filename +'_XS.jpg'
 		let filenameS = request.body.filename +'_S.jpg'
 		let filenameM = request.body.filename +'_M.jpg'
 		let filenameL = request.body.filename +'_L.jpg'
 		let filenameXL = request.body.filename +'_XL.jpg'
-
+		*/
+		await blobService.deleteBlobIfExists(blobContainer, filenameM, (error, resultM) => {})
+		/*
 		await blobService.deleteBlobIfExists(blobContainer, filenameXS, (error, resultXS) => {})
 		await blobService.deleteBlobIfExists(blobContainer, filenameS, (error, resultS) => {})
 		await blobService.deleteBlobIfExists(blobContainer, filenameM, (error, resultM) => {})
 		await blobService.deleteBlobIfExists(blobContainer, filenameL, (error, resultL) => {})
 		await blobService.deleteBlobIfExists(blobContainer, filenameXL, (error, resultXL) => {})
+		*/
 
 		if (_objectId) {
 			let find = {}
@@ -158,7 +171,7 @@ module.exports = (db, ascs, blobContainer) => {
 		}
 		response.send(true)
 	})
-
+	/*
 	router.post ('/forward_image', async (request, response) => {
 		let collection = request.body.collection
 		let fieldKey = request.body.fieldKey
@@ -209,7 +222,8 @@ module.exports = (db, ascs, blobContainer) => {
 			}
 		}
 	})
-
+	*/
+	/*
 	router.post ('/afterward_image', async (request, response) => {
 		let collection = request.body.collection
 		let fieldKey = request.body.fieldKey
@@ -262,6 +276,6 @@ module.exports = (db, ascs, blobContainer) => {
 			}
 		}
 	})
-
+	*/
  	return router
 }

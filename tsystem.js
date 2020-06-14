@@ -13,6 +13,7 @@ const Sheet = require('../youdu/DataSheet_youdu.js')
 
 const tAdministrators = require('./tAdministrators.js')
 const UpdateReference = require('./UpdateReference.js')
+const UpdateImageBlob = require('./UpdateImageBlob.js')
 const UpdateImagesBlob = require('./UpdateImagesBlob.js')
 const UpdateMultipleBlob = require('./UpdateMultipleBlob.js')
 
@@ -51,6 +52,7 @@ try {
 	app.use(Express.static(Path.join(__dirname, 'client/build')))
 	app.use('/tAdministrators', tAdministrators(db))
 	app.use('/update_reference', UpdateReference(db))
+	app.use('/update_image_blob', UpdateImageBlob(db, ascs, blobContainer))
 	app.use('/update_images_blob', UpdateImagesBlob(db, ascs, blobContainer))
 	app.use('/update_multiple_blob', UpdateMultipleBlob(db, ascs, blobContainer))
 	/*app.use('/upd_imgsblob', UpdImgsBlobRouter(collections, db))
@@ -170,7 +172,10 @@ try {
 		let find = request.body.find
 		let sort = request.body.sort
 		let projection = request.body.projection
-		let documents = await db.collection(collection).find(find, {projection:projection}).sort(sort).limit(50).toArray()
+
+		//console.log(collection+', '+find+', '+sort)
+
+		let documents = await db.collection(collection).find(find, {projection:projection}).sort(sort).toArray()
 		response.send(documents)
 	})
 	

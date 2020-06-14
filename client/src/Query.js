@@ -133,8 +133,9 @@ export default class Query extends Component {
 
 	find_documents () {
 		const {collection, find, sort, projection} = this.state
+		//console.log(response.data)
 		Axios.post('/find_documents', {collection:collection, find:find, sort:sort, projection:projection}).then((response) => {
-			//console.log(response.data)
+			console.log(response.data)
 			this.setState({
 				documents: response.data, 
 			})
